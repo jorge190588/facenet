@@ -1,0 +1,12 @@
+version: '2'
+services:
+ jupyter:
+  image: tf_facenet
+  container_name: jupyter_facenet
+  build: .
+  volumes:
+   - ./files:/notebooks
+  ports:
+   - "8880:8880"
+   - "6006:6006"
+   - "8886:8886"
