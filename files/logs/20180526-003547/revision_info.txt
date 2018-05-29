@@ -1,0 +1,7 @@
+arguments: src/train_tripletloss.py --logs_base_dir /notebooks/logs/ --models_base_dir /notebooks/models/20182405-1/ --data_dir /notebooks/lfw/output --image_size 160 --model_def models.inception_resnet_v1 --lfw_dir /notebooks/lfw/output --optimizer RMSPROP --learning_rate 0.01 --weight_decay 1e-4 --max_nrof_epochs 500
+--------------------
+tensorflow version: 1.7.0
+--------------------
+git hash: git rev-parse HEAD: No such file or directory
+--------------------
+git diff HEAD: No such file or directory
