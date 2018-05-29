@@ -52,36 +52,42 @@ def get_paths(lfw_dir, pairs):
     issame_list = []
     for pair in pairs:
         if len(pair) == 3:
-           
-            path0 = add_extension(os.path.join(lfw_dir, pair[0], pair[0] + '_' +  str( int(pair[1]))))
-            if path0== "":
-                path0 = add_extension(os.path.join(lfw_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[1])))
-                if path0== "":
-                    raise RuntimeError('No file "%s" with extension png or jpg.' % path0)
+            pathFile = os.path.join(lfw_dir, pair[0], pair[0] + '_' +  str( int(pair[1])))
+            path0 = add_extension(pathFile)
+            if path0 == "":
+                pathFile = os.path.join(lfw_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[1]))
+                path0 = add_extension(pathFile)
+                if path0 == "":
+                    raise RuntimeError('No file "%s" with extension png or jpg.' % pathFile)
                         
-            
-            path1 = add_extension(os.path.join(lfw_dir, pair[0], pair[0] + '_' +  str( int(pair[2]))))
-            if path1== "":
-                path1 = add_extension(os.path.join(lfw_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[2])))
-                if path1== "":
-                    raise RuntimeError('No file "%s" with extension png or jpg.' % path1)
+            pathFile = os.path.join(lfw_dir, pair[0], pair[0] + '_' +  str( int(pair[2])))
+            path1 = add_extension(pathFile)
+            if path1 == "":
+                pathFile = os.path.join(lfw_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[2]))
+                path1 = add_extension(pathFile)
+                if path1 == "":
+                    raise RuntimeError('No file "%s" with extension png or jpg.' % pathFile)
             
             issame = True
         elif len(pair) == 4:
-            
-            path0 = add_extension(os.path.join(lfw_dir, pair[0], pair[0] + '_' +  str( int(pair[1]))))
+            pathFile = os.path.join(lfw_dir, pair[0], pair[0] + '_' +  str( int(pair[1])))
+            path0 = add_extension(pathFile)
             if path0== "":
-                path0 = add_extension(os.path.join(lfw_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[1])))
+                pathFile = os.path.join(lfw_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[1]))
+                path0 = add_extension(pathFile)
                 if path0== "":
-                    raise RuntimeError('No file "%s" with extension png or jpg.' % path0)
+                    raise RuntimeError('No file "%s" with extension png or jpg.' % pathFile)
             
-            path1 = add_extension(os.path.join(lfw_dir, pair[2], pair[2] + '_' +  str( int(pair[3]))))
+            pathFile =os.path.join(lfw_dir, pair[2], pair[2] + '_' +  str( int(pair[3])))
+            path1 = add_extension(pathFile)
             if path1== "":
-                path1 = add_extension(os.path.join(lfw_dir, pair[2], pair[2] + '_' + '%04d' % int(pair[3])))
+                pathFile = os.path.join(lfw_dir, pair[2], pair[2] + '_' + '%04d' % int(pair[3]))
+                path1 = add_extension(pathFile)
                 if path1== "":
-                    raise RuntimeError('No file "%s" with extension png or jpg.' % path1)
+                    raise RuntimeError('No file "%s" with extension png or jpg.' % pathFile)
             
             issame = False
+
         if os.path.exists(path0) and os.path.exists(path1):    # Only add the pair if both paths exist
             path_list += (path0,path1)
             issame_list.append(issame)
