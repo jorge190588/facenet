@@ -1,4 +1,5 @@
 UBUNTU
+STEP 1
 export PYTHONPATH=/notebooks/src
 
 for N in {1..4}; do \
@@ -11,17 +12,32 @@ python src/align/align_dataset_mtcnn.py \
 --gpu_memory_fraction 0.25 \
 & done
 
+STEP 2
+Original
 
-python src/validate_on_lfw.py \
-/notebooks/lfw/lfw_mtcnnpy_160 \
-/notebooks/models/20180402-114759 \
---distance_metric 1 \
---use_flipped_images \
---subtract_mean \
---use_fixed_image_standardization
+my
+for N in {1..4}; do python src/align/align_dataset_mtcnn.py /notebooks/lfw/input /notebooks/lfw/output --image_size 160 --margin 32 --random_order --gpu_memory_fraction 0.25 & done
+
+STEP 3
+
+Original
+python src/validate_on_lfw.py /notebooks/lfw/lfw_mtcnnpy_160 /notebooks/models/20180402-114759 --distance_metric 1 --use_flipped_images --subtract_mean --use_fixed_image_standardization --lfw_pair data/pairsOriginal.txt 
+
+my
+python src/validate_on_lfw.py /notebooks/lfw/output /notebooks/models/20180402-114759 --distance_metric 1 --use_flipped_images --subtract_mean --use_fixed_image_standardization
 
 
 python src/classifier.py TRAIN /notebooks/lfw/lfw_mtcnnpy_160 /notebooks/models/20180402-114759/20180402-114759.pb /notebooks/models/20180402-114759/20180402-114759.pkl --batch_size 1000 --min_nrof_images_per_class 40 --nrof_train_images_per_class 35 --use_split_dataset
+
+
+
+python src/facenet_train.py --batch_size 15 --gpu_memory_fraction 0.25 --models_base_dir /notebooks/models/20182405-1 --pretrained_model /notebooks/models/20182405-1.ckpt-182784 --model_def models.nn2 --logs_base_dir logs --data_dir /notebooks/lfw/input --lfw_pairs /notebooks/lfw/lfw_pairs.txt --image_size 224 --lfw_dir /notebooks/lfw --optimizer ADAM --max_nrof_epochs 1000 --learning_rate 0.00001
+python src/facenet_train.py --batch_size 15 --gpu_memory_fraction 0.25 --models_base_dir /models/20182405-1 --pretrained_model /models/20182405-1.ckpt-182784 --model_def models.nn2 --logs_base_dir logs --data_dir /lfw/input --lfw_pairs /lfw/lfw_pairs.txt --image_size 224 --lfw_dir /lfw --optimizer ADAM --max_nrof_epochs 1000 --learning_rate 0.00001
+
+
+TRAINIG
+python src/train_tripletloss.py --logs_base_dir /notebooks/logs/ --models_base_dir /notebooks/models/20182405-1/ --data_dir /notebooks/lfw/output --image_size 160 --model_def models.inception_resnet_v1 --lfw_dir /notebooks/lfw/output --optimizer RMSPROP --learning_rate 0.01 --weight_decay 1e-4 --max_nrof_epochs 500
+
 
 WINDOWS
 export PYTHONPATH=C:/Users/jorge/repository/facenet/files/src
@@ -53,3 +69,23 @@ python src/classifier.py TRAIN /notebooks/lfw/lfw_mtcnnpy_160 /notebooks/models/
 
 
 sudo nautilus
+
+
+
+
+
+Training a classifier on the training set part of the dataset is done as:
+
+python src/classifier.py TRAIN /notebooks/lfw/output /notebooks/models/20182405-1/20182405-1.pb /notebooks/models/20182405-1/20182405-1.pkl --batch_size 1000 --min_nrof_images_per_class 40 --nrof_train_images_per_class 35 --use_split_dataset
+
+The trained classifier can later be used for classification using the test set:
+
+python src/classifier.py CLASSIFY /notebooks/lfw/lfw_mtcnnalign_160 /notebooks/models/20182405-1/20182405-1.pb /notebooks/models/20182405-1/20182405-1.pkl --batch_size 1000 --min_nrof_images_per_class 40 --nrof_train_images_per_class 35 --use_split_dataset
+
+The training of the classifier is done in a similar way as before:
+
+python src/classifier.py TRAIN /notebooks/lfw/input/ /notebooks/models/20180402-114759/20180402-114759.pb /notebooks/models/20180402-114759/20180402-114759.pkl --batch_size 1000
+
+Classification on the test set can be ran using:
+
+python src/classifier.py CLASSIFY /notebooks/lfw/test/ /notebooks/models/20182405-1/20182405-1.pb ~/notebooks/models/20182405-1/20182405-1.pkl --batch_size 1000
