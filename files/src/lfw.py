@@ -40,7 +40,10 @@ def evaluate(embeddings, actual_issame, nrof_folds=10, distance_metric=0, subtra
         np.asarray(actual_issame), nrof_folds=nrof_folds, distance_metric=distance_metric, subtract_mean=subtract_mean)
     thresholds = np.arange(0, 4, 0.001)
     val, val_std, far = facenet.calculate_val(thresholds, embeddings1, embeddings2,
-        np.asarray(actual_issame), 1e-3, nrof_folds=nrof_folds, distance_metric=distance_metric, subtract_mean=subtract_mean)
+                            np.asarray(actual_issame), 1e-3, 
+                            nrof_folds=nrof_folds, 
+                            distance_metric=distance_metric, 
+                            subtract_mean=subtract_mean)
     return tpr, fpr, accuracy, val, val_std, far
 
 def get_paths(lfw_dir, pairs):
@@ -49,12 +52,35 @@ def get_paths(lfw_dir, pairs):
     issame_list = []
     for pair in pairs:
         if len(pair) == 3:
-            path0 = add_extension(os.path.join(lfw_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[1])))
-            path1 = add_extension(os.path.join(lfw_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[2])))
+           
+            path0 = add_extension(os.path.join(lfw_dir, pair[0], pair[0] + '_' +  str( int(pair[1]))))
+            if path0== "":
+                path0 = add_extension(os.path.join(lfw_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[1])))
+                if path0== "":
+                    raise RuntimeError('No file "%s" with extension png or jpg.' % path0)
+                        
+            
+            path1 = add_extension(os.path.join(lfw_dir, pair[0], pair[0] + '_' +  str( int(pair[2]))))
+            if path1== "":
+                path1 = add_extension(os.path.join(lfw_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[2])))
+                if path1== "":
+                    raise RuntimeError('No file "%s" with extension png or jpg.' % path1)
+            
             issame = True
         elif len(pair) == 4:
-            path0 = add_extension(os.path.join(lfw_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[1])))
-            path1 = add_extension(os.path.join(lfw_dir, pair[2], pair[2] + '_' + '%04d' % int(pair[3])))
+            
+            path0 = add_extension(os.path.join(lfw_dir, pair[0], pair[0] + '_' +  str( int(pair[1]))))
+            if path0== "":
+                path0 = add_extension(os.path.join(lfw_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[1])))
+                if path0== "":
+                    raise RuntimeError('No file "%s" with extension png or jpg.' % path0)
+            
+            path1 = add_extension(os.path.join(lfw_dir, pair[2], pair[2] + '_' +  str( int(pair[3]))))
+            if path1== "":
+                path1 = add_extension(os.path.join(lfw_dir, pair[2], pair[2] + '_' + '%04d' % int(pair[3])))
+                if path1== "":
+                    raise RuntimeError('No file "%s" with extension png or jpg.' % path1)
+            
             issame = False
         if os.path.exists(path0) and os.path.exists(path1):    # Only add the pair if both paths exist
             path_list += (path0,path1)
@@ -72,7 +98,8 @@ def add_extension(path):
     elif os.path.exists(path+'.png'):
         return path+'.png'
     else:
-        raise RuntimeError('No file "%s" with extension png or jpg.' % path)
+        return ""
+        #raise RuntimeError('No file "%s" with extension png or jpg.' % path)
 
 def read_pairs(pairs_filename):
     pairs = []
