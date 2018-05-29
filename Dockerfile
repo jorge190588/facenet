@@ -4,12 +4,14 @@ MAINTAINER Jorge Santos
 
 RUN apt-get update 
 RUN apt-get --yes install python-pip
-RUN pip install tensorflow==1.7
+RUN pip install --upgrade pip
+RUN pip install tensorflow-gpu==1.7
 RUN pip install scipy
 RUN pip install scikit-learn
 RUN pip install opencv-python
 RUN pip install h5py
 RUN apt-get --yes build-dep python-matplotlib
+RUN apt-get --yes install python-matplotlib
 RUN pip install Pillow
 RUN pip install requests
 RUN pip install psutil

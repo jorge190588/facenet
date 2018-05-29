@@ -2,6 +2,8 @@ version: '2'
 services:
  jupyter:
   image: tf_facenet
+  environment:
+    - PYTHONPATH = /notebooks/src
   container_name: jupyter_facenet
   build: .
   volumes:
