@@ -1,76 +1,52 @@
 UBUNTU
 STEP 1
 export PYTHONPATH=/notebooks/src
+export PYTHONPATH=C:\Users\jorge\repository\facenet\files\src
 
-for N in {1..4}; do \
-python src/align/align_dataset_mtcnn.py \
-/notebooks/lfw/raw \
-/notebooks/lfw/lfw_mtcnnpy_160 \
---image_size 160 \
---margin 32 \
---random_order \
---gpu_memory_fraction 0.25 \
-& done
 
 STEP 2
+
 Original
+ubuntu
+for N in {1..4}; do python src/align/align_dataset_mtcnn.py lfw/raw lfw/lfw_mtcnnpy_160 --image_size 160 --margin 32 --random_order --gpu_memory_fraction 0.25 & done
+windows
+python src/align/align_dataset_mtcnn.py lfw/raw lfw/lfw_mtcnnpy_160 --image_size 160 --margin 32 --random_order --gpu_memory_fraction 0.25
 
 my
+ubuntu 
 for N in {1..4}; do python src/align/align_dataset_mtcnn.py /notebooks/lfw/input /notebooks/lfw/output --image_size 160 --margin 32 --random_order --gpu_memory_fraction 0.25 & done
+windows
+python src/align/align_dataset_mtcnn.py lfw/input lfw/output --image_size 160 --margin 32 --random_order --gpu_memory_fraction 0.25
+
 
 STEP 3
 
 Original
-python src/validate_on_lfw.py /notebooks/lfw/lfw_mtcnnpy_160 /notebooks/models/20180402-114759 --distance_metric 1 --use_flipped_images --subtract_mean --use_fixed_image_standardization --lfw_pair data/pairsOriginal.txt 
+ubuntu
+python src/validate_on_lfw.py lfw/lfw_mtcnnpy_160 models/20180402-114759 --distance_metric 1 --use_flipped_images --subtract_mean --use_fixed_image_standardization --lfw_pair data/pairsOriginal.txt 
+python src/validate_on_lfw.py lfw/output models/20180402-114759 --distance_metric 1 --use_flipped_images --subtract_mean --use_fixed_image_standardization --lfw_pair data/pairs.txt  --lfw_batch_size 44
+windows
+python src/validate_on_lfw.py lfw/lfw_mtcnnpy_160 models/20180402-114759 --distance_metric 1 --use_flipped_images --subtract_mean --use_fixed_image_standardization --lfw_pair data/pairsOriginal.txt 
 
 my
-python src/validate_on_lfw.py /notebooks/lfw/output /notebooks/models/20180402-114759 --distance_metric 1 --use_flipped_images --subtract_mean --use_fixed_image_standardization
-
-
-python src/classifier.py TRAIN /notebooks/lfw/lfw_mtcnnpy_160 /notebooks/models/20180402-114759/20180402-114759.pb /notebooks/models/20180402-114759/20180402-114759.pkl --batch_size 1000 --min_nrof_images_per_class 40 --nrof_train_images_per_class 35 --use_split_dataset
+python src/validate_on_lfw.py lfw/output models/20180402-114759 --distance_metric 1 --use_flipped_images --subtract_mean --use_fixed_image_standardization
 
 
 
+my
+python src/classifier.py TRAIN /notebooks/lfw/output /notebooks/models/20180402-114759/20180402-114759.pb /notebooks/models/20180402-114759/20180402-114759.pkl --batch_size 1000 --min_nrof_images_per_class 40 --nrof_train_images_per_class 35 --use_split_dataset
+
+my
 python src/facenet_train.py --batch_size 15 --gpu_memory_fraction 0.25 --models_base_dir /notebooks/models/20182405-1 --pretrained_model /notebooks/models/20182405-1.ckpt-182784 --model_def models.nn2 --logs_base_dir logs --data_dir /notebooks/lfw/input --lfw_pairs /notebooks/lfw/lfw_pairs.txt --image_size 224 --lfw_dir /notebooks/lfw --optimizer ADAM --max_nrof_epochs 1000 --learning_rate 0.00001
-python src/facenet_train.py --batch_size 15 --gpu_memory_fraction 0.25 --models_base_dir /models/20182405-1 --pretrained_model /models/20182405-1.ckpt-182784 --model_def models.nn2 --logs_base_dir logs --data_dir /lfw/input --lfw_pairs /lfw/lfw_pairs.txt --image_size 224 --lfw_dir /lfw --optimizer ADAM --max_nrof_epochs 1000 --learning_rate 0.00001
+
 
 
 TRAINIG
 python src/train_tripletloss.py --logs_base_dir /notebooks/logs/ --models_base_dir /notebooks/models/20182405-1/ --data_dir /notebooks/lfw/output --image_size 160 --model_def models.inception_resnet_v1 --lfw_dir /notebooks/lfw/output --optimizer RMSPROP --learning_rate 0.01 --weight_decay 1e-4 --max_nrof_epochs 500
 
 
-WINDOWS
-export PYTHONPATH=C:/Users/jorge/repository/facenet/files/src
-
-for N in {1..4}; do \
-python src/align/align_dataset_mtcnn.py \
-/lfw/raw \
-/lfw/lfw_mtcnnpy_160 \
---image_size 160 \
---margin 32 \
---random_order \
---gpu_memory_fraction 0.25 \
-& done
-
-for N in {1..4}; do python src/align/align_dataset_mtcnn.py /lfw/raw /lfw/lfw_mtcnnpy_160 --image_size 160 --margin 32 --random_order --gpu_memory_fraction 0.25 & done
-
-
-python src/validate_on_lfw.py \
-/notebooks/lfw/lfw_mtcnnpy_160 \
-/notebooks/models/20180402-114759 \
---distance_metric 1 \
---use_flipped_images \
---subtract_mean \
---use_fixed_image_standardization
-
-
-python src/classifier.py TRAIN /notebooks/lfw/lfw_mtcnnpy_160 /notebooks/models/20180402-114759/20180402-114759.pb /notebooks/models/20180402-114759/20180402-114759.pkl --batch_size 1000 --min_nrof_images_per_class 40 --nrof_train_images_per_class 35 --use_split_dataset
-
-
 
 sudo nautilus
-
-
 
 
 
@@ -80,7 +56,7 @@ python src/classifier.py TRAIN /notebooks/lfw/output /notebooks/models/20182405-
 
 The trained classifier can later be used for classification using the test set:
 
-python src/classifier.py CLASSIFY /notebooks/lfw/lfw_mtcnnalign_160 /notebooks/models/20182405-1/20182405-1.pb /notebooks/models/20182405-1/20182405-1.pkl --batch_size 1000 --min_nrof_images_per_class 40 --nrof_train_images_per_class 35 --use_split_dataset
+python src/classifier.py CLASSIFY /notebooks/lfw/output /notebooks/models/20182405-1/20182405-1.pb /notebooks/models/20182405-1/20182405-1.pkl --batch_size 1000 --min_nrof_images_per_class 40 --nrof_train_images_per_class 35 --use_split_dataset
 
 The training of the classifier is done in a similar way as before:
 
@@ -89,3 +65,11 @@ python src/classifier.py TRAIN /notebooks/lfw/input/ /notebooks/models/20180402-
 Classification on the test set can be ran using:
 
 python src/classifier.py CLASSIFY /notebooks/lfw/test/ /notebooks/models/20182405-1/20182405-1.pb ~/notebooks/models/20182405-1/20182405-1.pkl --batch_size 1000
+
+
+
+
+python src/train_softmax.py --logs_base_dir /notebooks/logs/ --models_base_dir /notebooks/models/20182405-1/ --data_dir /notebooks/lfw/output --image_size 160 --model_def models.inception_resnet_v1 --optimizer ADAM --learning_rate -1 --max_nrof_epochs 150 --keep_probability 0.8 --random_crop --random_flip --use_fixed_image_standardization --learning_rate_schedule_file data/learning_rate_schedule_classifier_casia.txt --weight_decay 5e-4 --embedding_size 512 --lfw_distance_metric 1 --lfw_use_flipped_images --lfw_subtract_mean --validation_set_split_ratio 0.05 --validate_every_n_epochs 5 --prelogits_norm_loss_factor 5e-4
+
+
+https://github.com/bearsprogrammer/real-time-deep-face-recognition

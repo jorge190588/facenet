@@ -21,8 +21,8 @@ from sklearn.svm import SVC
 from sklearn.externals import joblib
 
 print('Creating networks and loading parameters')
-# urlBase = 'C:/Users/jorge/repository/facenet/files'
-urlBase = '/notebooks'
+urlBase = 'C:/Users/jorge/repository/facenet/files'
+# urlBase = '/notebooks'
 with tf.Graph().as_default():
     gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.6)
     sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options, log_device_placement=False))
@@ -38,8 +38,9 @@ with tf.Graph().as_default():
         image_size = 182
         input_image_size = 160
         
-        HumanNames = os.listdir(urlBase+"/lfw/lfw_mtcnnpy_160")
+        HumanNames = os.listdir(urlBase+"/lfw/output")
         HumanNames.sort()
+        print(HumanNames)
 
         print('Loading feature extraction model')
         modeldir = urlBase+'/models/20180402-114759/20180402-114759.pb'
@@ -50,20 +51,25 @@ with tf.Graph().as_default():
         phase_train_placeholder = tf.get_default_graph().get_tensor_by_name("phase_train:0")
         embedding_size = embeddings.get_shape()[1]
 
-        classifier_filename = urlBase+'/models/20180402-114759/20180402-114759.pkl'
+        classifier_filename = urlBase+'/models/20180402-114759/lfw_classifier2.pkl'
         classifier_filename_exp = os.path.expanduser(classifier_filename)
+        
         with open(classifier_filename_exp, 'rb') as infile:
             u = pickle._Unpickler(infile)
             u.encoding = 'latin1'
             (model, class_names) = u.load()
+            #(model, class_names) = infile.load()
             print('load classifier file-> %s' % classifier_filename_exp)
 
         video_capture = cv2.VideoCapture(0) #'./test.mp4'
+        video_capture.set(3,4920)
+        video_capture.set(4,3080)
+
         c = 0
 
         # #video writer
         fourcc = cv2.VideoWriter_fourcc(*'DIVX')
-        out = cv2.VideoWriter('3F_0726.avi', fourcc, fps=30, frameSize=(1280,960))
+        out = cv2.VideoWriter('3F_0726.avi', fourcc, fps=30, frameSize=(4920,3080))
 
         print('Start Recognition!')
         prevTime = 0
@@ -86,7 +92,7 @@ with tf.Graph().as_default():
                 nrof_faces = bounding_boxes.shape[0]
 
                 if nrof_faces > 0:
-                    print('Detected Face Number: %d' % nrof_faces)
+                    #print('Detected Face Number: %d' % nrof_faces)
                     det = bounding_boxes[:, 0:4]
                     img_size = np.asarray(frame.shape)[0:2]
 
@@ -118,11 +124,11 @@ with tf.Graph().as_default():
                         feed_dict = {images_placeholder: scaled_reshape[i], phase_train_placeholder: False}
                         emb_array[0, :] = sess.run(embeddings, feed_dict=feed_dict)
                         predictions = model.predict_proba(emb_array)
-                        print('predictions: ',predictions)
+                        #print('predictions: ',predictions)
                         best_class_indices = np.argmax(predictions, axis=1)
-                        print('best class indices: ',best_class_indices)
+                        #print('best class indices: ',best_class_indices)
                         best_class_probabilities = predictions[np.arange(len(best_class_indices)), best_class_indices]
-                        print('best class probabilities: ',best_class_probabilities)
+                        #print('best class probabilities: ',best_class_probabilities)
                         cv2.rectangle(frame, (bb[i][0], bb[i][1]), (bb[i][2], bb[i][3]), (0, 255, 0), 2)    #boxing face
 
                         #plot result idx under box
@@ -138,8 +144,8 @@ with tf.Graph().as_default():
                                 print('name: ',result_names)
                                 cv2.putText(frame, result_names, (text_x, text_y), cv2.FONT_HERSHEY_COMPLEX_SMALL,
                                             1, (0, 0, 255), thickness=1, lineType=2)
-                else:
-                    print('Unable to align')
+                #else:
+                    #print('Unable to align')
         
             sec = curTime - prevTime
             prevTime = curTime
