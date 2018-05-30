@@ -1,4 +1,4 @@
-	0	300
+	21	21	
 Camila_Santos	1	999
 David_Beckham	1	31
 Estefani_Lara	1	999
@@ -20,7 +20,15 @@ ronaldo	1	16
 Sergio_Ramos	1	999
 Xavi_Hernadez	1	878
 Zinedine_Zidane	1	999
-
-
-
+Camila_Santos	20	David_Beckham	20
+Estefani_Lara	15	Gareth_Bale	100
+Iker_Casillas	10	jorge	100
+Jose_Mourinho	10	Leonel_Messi	10
+Luca_Modric	10	Luis_Figo	10
+Marcelo_Vieira	10	Marco_Asensio	10
+Michael_Jackson	10	Neymar_daSilva	10
+Pep_Guardiola	10	Raul_Gonzalez	10
+Ronaldinho_Moreira	10	ronaldo	10
+Sergio_Ramos	10	Xavi_Hernadez	10
+Zinedine_Zidane	10	
 
