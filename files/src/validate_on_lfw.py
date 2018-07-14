@@ -103,6 +103,8 @@ def evaluate(sess, enqueue_op, image_paths_placeholder, labels_placeholder, phas
     sess.run(enqueue_op, {image_paths_placeholder: image_paths_array, labels_placeholder: labels_array, control_placeholder: control_array})
     
     embedding_size = int(embeddings.get_shape()[1])
+    print('nrof_images',nrof_images)
+    print('batch_size',batch_size)
     assert nrof_images % batch_size == 0, 'The number of LFW images must be an integer multiple of the LFW batch size'
     nrof_batches = nrof_images // batch_size
     emb_array = np.zeros((nrof_images, embedding_size))
@@ -132,7 +134,7 @@ def evaluate(sess, enqueue_op, image_paths_placeholder, labels_placeholder, phas
     
     auc = metrics.auc(fpr, tpr)
     print('Area Under Curve (AUC): %1.3f' % auc)
-    eer = brentq(lambda x: 1. - x - interpolate.interp1d(fpr, tpr)(x), 0., 1.)
+    eer = brentq(lambda x: 1. - x - interpolate.interp1d(fpr, tpr,fill_value="extrapolate")(x), 0., 1.)
     print('Equal Error Rate (EER): %1.3f' % eer)
     
 def parse_arguments(argv):
