@@ -22,6 +22,7 @@ https://github.com/kpzhang93/MTCNN_face_detection_alignment
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+# Documentarion link https://www.pydoc.io/pypi/facenet-1.0.3/autoapi/src/align/detect_face/index.html
 
 from __future__ import absolute_import
 from __future__ import division

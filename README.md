@@ -37,7 +37,7 @@ python src/validate_on_lfw.py lfw/output models/20180402-114759 --distance_metri
 
 ### Train
 ```
-python src/classifier.py TRAIN lfw/output models/20180402-114759/20180402-114759.pb models/20180402-114759/lfw_classifier600x100.pkl --batch_size 236 --min_nrof_images_per_class 800 --nrof_train_images_per_class 100 --use_split_dataset
+python src/classifier.py TRAIN lfw/output models/20180402-114759/20180402-114759.pb models/20180402-114759/lfw_classifier10x800.pkl --batch_size 100 --min_nrof_images_per_class 10 --nrof_train_images_per_class 800 --use_split_dataset
 ```
 
 ### Classifier

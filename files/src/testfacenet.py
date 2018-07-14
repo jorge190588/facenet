@@ -51,7 +51,7 @@ with tf.Graph().as_default():
         phase_train_placeholder = tf.get_default_graph().get_tensor_by_name("phase_train:0")
         embedding_size = embeddings.get_shape()[1]
 
-        classifier_filename = urlBase+'/models/20180402-114759/lfw_classifier2.pkl'
+        classifier_filename = urlBase+'/models/20180402-114759/lfw_classifier10x800.pkl'
         classifier_filename_exp = os.path.expanduser(classifier_filename)
         
         with open(classifier_filename_exp, 'rb') as infile:
