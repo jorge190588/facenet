@@ -8,58 +8,33 @@ Los requerimientos para trabajar con facenet son:
 2. opencv-python==3.4.0.12
 
 Puede utilizar las siguientes guias de referencia:
-*[Instalar python y pip](https://github.com/BurntSushi/nfldb/wiki/Python-&-pip-Windows-installation)
+
+ * [Instalar python y pip](https://github.com/BurntSushi/nfldb/wiki/Python-&-pip-Windows-installation)
 
 
-## 1. Antes de utilizar Facenet
 
-Para reconocer rostros debemos alimentar Facenet con un conjunto de imagenes con el siguiente formato.
+## 1. Recopilar imagenes para el entrenamiento
 
-```
-Folder
-	Imagen_1.jpg
-	Imagen_2.jpg
-	Imagen_n.jpg
-```
+Para reconocer rostros debemos alimentar Facenet con un conjunto de imagenes de entrenamiento, estas imagenes puede ser recopiladas de forma manual, por medio de una camara o por medio de un video.   Es pertinente aclarar que este procedimiento es para recopilar imagenes que luego seran alineadas y estas imagenes alineadas son forman el conjunto de datos para el entrenamiento.
 
-### Formato de carpetas y nombres de imagenes
+El conjunto de datos para el entrenamiento estan formadas por carpetas e imagenes.    Una carpeta representa el nombre de una persona y las imagenes son los archivos que contienen el rostro de una persona.    Es importante recordar que cada imagen debe contener un solo rostro de una persona.
 
-#### Formato para el nombre de la carpeta: 
-
-Para identificar una carpeta se deben utilizar dos identificadores, para nuestro ejemplo usamos el nombre y el apellido de una persona.  El nombre y el apellido deben iniciar con mayuscula y deben estar unidos por un guion bajo.  Por Ejemplo:
-
-```
-	Jorge_Santos
-	JorgeSalvador_SantosNeill
-```
-
-Los dos ejemplos anteriores son validos porque inician con un caracterer en mayuscula y estan separados por guion bajo.
+El formato para guardar el nombre de una carpeta de de las imagenes se describe a continuacion:
 
 
-#### Formato para el nombre de cada imagen:
+| Tipo | Partes | Formato | Ejemplo |
+| ------ | ------ | ------ | ------ |
+| Carpeta | Dos | Parte1_Parte2 | Jorge_Santos |
+| Imagen | Tres | Parte1_Parte2_numeroDeImagen | Jorge_Santos_1.jpg |
 
-Cada imagen debe tener un formato al igual que el nombre de las carpetas.   Si las imagenes son generadas con un proceso manual, el nombre de la imagen debe coincidir con el el nombre de la carpeta.  Es decir, si el nombre de la carpeta es Jorge_Santos, el nombre de las imagenes deberia de ser:
 
-```
-	Jorge_Santos_1.jpg
-	Jorge_Santos_2.jpg
-	Jorge_Santos_3.jpg
-```
+El ejemplo de las carpetas para el entrenamiento es el siguiente:
 
-Puede notar que el el nombre se compone de tres partes, las primeras dos partes es el nombre y apellido de la persona y la tercera parte representa el numero de la imagen.   Todas las imagenes deben tener el formato "jpg"
+![N|Solid](imagenes/carpetaImagenesDeEntrada.JPG)
 
-Si las imagenes son generadas generadas automaticamente desde una camara, debe asegurarse de que las imagenes se guarden con el formato especificado.
+El ejemplo de las imagenes de una carpeta es el siguiente:
 
-#### Un ejemplo de una carpeta con sus imagenes
-
-El resultado de un ejemplo completo de una carpeta y sus imagenes se describe en esta seccion.   Dado un ejemplo que se requiere guardar 5 imagenes de la persona jorge santos, el resultado deberia ser el siguiente:
-
-```
-Jorge_Santos
-	Jorge_Santos_1.jpg
-	Jorge_Santos_2.jpg
-	Jorge_Santos_3.jpg
-```
+![N|Solid](imagenes/carpetaJorge_Santos.JPG)
 
 
 
@@ -67,11 +42,22 @@ Jorge_Santos
 
 1. Crear una carpeta con nombre "imagenesDeEntrada" en el directorio "facenet/files/lfw/"
 
+![N|Solid](imagenes/crearCarpetaImagenesDeEntrada.JPG)
+
 2. Abrir el archivo openCamera.py con un editor de texto, esta ubicado en el directorio "facenet/files/data"
 
-3.  Cambiar el contenido de la variable "name" con el nombre de la persona de la que queremos capturar un conjunto de imagenes. El contenido de la variable debe tener el formato "Nombre_Apellido"
+![N|Solid](imagenes/carpetaData.JPG)
+
+
+3.  Cambiar el contenido de la variable "name" con el nombre de la persona de la que queremos capturar un conjunto de imagenes. El contenido de la variable debe tener el formato "Nombre_Apellido", por ejemplo Jorge_Santos
+
+![N|Solid](imagenes/archivoOpenCamera.JPG)
+
 
 4. Cambiar el contenido de la variable "directorioDeImagenes" por "..\lfw\imagenesDeEntrada"
+
+![N|Solid](imagenes/archivoOpenCamera.JPG)
+
 
 5. Ejecutar el archivo "openCamera.py".  Para ejecutar el archivo debemos estar ubicados en la consola de comandos en el directorio "facenet/files/data" y ejecutar el comando siguiente
 
@@ -79,49 +65,73 @@ Jorge_Santos
 	py openCamera.py
 ```
 
+![N|Solid](imagenes/ejecutarOpenCamera.JPG)
+
+Al ejectuar el comando anterior debe abrir la camara y grabar 1000 imagenes en la carpeta con nombre Jorge_Santos
+
+![N|Solid](imagenes/carpetaJorge_Santos.JPG)
 
 
 
+## 2. Conjunto de imagenes de entrenamiento.
+
+El conjunto de imagenes recopiladas en el paso previo seran utilizada para generar el conjunto de imagenes de entrenamiento.   El conjunto de imagenes de entrenamiento contiene los rostos de las imagenes originales.   Note la diferencia entre una imagen original y una imagen de entrenamiento.
 
 
-# Install
+Imagen original
 
-# Run
+![N|Solid](imagenes/Jorge_Santos_1.JPG)
 
-## 1. Set environment variable to use facenet
+Imagen de entrenamiento
+
+![N|Solid](imagenes/Jorge_Santos_1Rostro.png)
+
+
+Los pasos para convertir las imagenes originales en imagenes con solo el rostro de la persona son el siguiente:
+
+1. Establecer la variable de ambiente donde se encuentran los archivos de facenet.   Ejecute el siguiente comando desde la linea de comandos segun su sistema operativo.
+
 
 Ubuntu
+
 ```
 export PYTHONPATH=/notebooks/src
 ```
 
 Windows
+
 ```
 set PYTHONPATH=C:\Users\jorge\repository\facenet\files\src
 ```
 
-## 2. Align data
 
-### Original Example
+Ejemplo de la variable de entorno desde windows
 
-Ubuntu 
+
+![N|Solid](imagenes/variableDeEntornoDesdeWindows.jpg)
+
+
+2. Recortar las imagenes originales ejecutando la siguiente sentencia desde la linea de comandos:
+
 ```
-for N in {1..4}; do python src/align/align_dataset_mtcnn.py lfw/raw lfw/lfw_mtcnnpy_160 --image_size 160 --margin 32 --random_order --gpu_memory_fraction 0.25 & done
-```
-Note: remove for N in {1..4}; do and & done in the before code example
-
-
-### Custom Example
-
-Ubuntu
-```
-for N in {1..4}; do python src/align/align_dataset_mtcnn.py lfw/input lfw/output --image_size 160 --margin 32 --random_order --gpu_memory_fraction 0.25 & done
+python src/align/align_dataset_mtcnn.py lfw/imagenesDeEntrada lfw/imagenesRostros --image_size 160 --margin 32 --random_order --gpu_memory_fraction 0.25
 ```
 
-Note: remove for N in {1..4}; do and & done in the before code example
+El resultado despues de la ejecucion de la sentencia anterior deberia ser similar al siguiente:
 
 
-## 2. Test Example
+![N|Solid](imagenes/resultadoDeImagenesRecortadas.jpg)
+
+
+
+
+## 3. Crear el archivo pairs.txt
+
+
+
+
+
+## 2. Probar el ejemplo
 
 ### Original Example
 
