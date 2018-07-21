@@ -5,7 +5,7 @@ import os
 cap = cv2.VideoCapture(0)
 name = 'Jorge_Santos'
 folder=name+'\\'
-directorioDeImagenes = '..\lfw\origen'
+directorioDeImagenes = '..\lfw\imagenesDeEntrada'
 path = os.path.dirname(os.path.realpath(__file__))
 path = os.path.join(path,directorioDeImagenes,folder)
 name = name+'_'
