@@ -1,5 +1,51 @@
 # Facenet project
 
+## 1. Antes de utilizar Facenet
+
+Para reconocer rostros debemos alimentar Facenet con un conjunto de imagenes con el siguiente formato.
+
+Folder
+	Imagen_1.jpg
+	Imagen_2.jpg
+	Imagen_n.jpg
+
+Formato para el nombre de la carpeta: para identificar una carpeta se deben utilizar dos identificadores, para nuestro ejemplo usamos el nombre y el apellido de una persona.  El nombre y el apellido deben iniciar con mayuscula y deben estar unidos por un guion bajo.  Por Ejemplo:
+
+	Jorge_Santos
+	JorgeSalvador_SantosNeill
+
+Los dos ejemplos anteriores son validos porque inician con un caracterer en mayuscula y estan separados por guion bajo.
+
+
+Formato para el nombre de cada imagen:
+
+
+Es decir, la persona que vamos reconocer se llama Jorge Santos, la estructura deberia ser la siguiente
+
+Jorge_Santos
+	Jorge_Santos_1.jpg
+	Jorge_Santos_2.jpg
+	Jorge_Santos_3.jpg
+
+
+
+
+Estas imagenes son procesadas para obtener el rostro de la persona que aparece en cada una de las imagenes.
+
+### Pasos para capturar imagenes por medio de la camara.
+
+1. Crear una carpeta con nombre "imagenesDeEntrada" en el directorio "facenet/files/lfw/"
+
+2. Abrir el archivo openCamera.py ubicado en el directorio "facenet/files/data"
+
+3.  Cambiar el contenido de la variable "name" con el nombre de la persona de la que queremos capturar un conjunto de imagenes. El contenido de la variable debe tener el formato "Nombre_Apellido"
+
+4. Cambiar el contenido de la variable "directorioDeImagenes" por "..\lfw\imagenesDeEntrada"
+
+
+
+
+
 
 # Install
 

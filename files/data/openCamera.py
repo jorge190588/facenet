@@ -3,10 +3,11 @@ import numpy as np
 import os
 
 cap = cv2.VideoCapture(0)
-name = 'Estefani_Lara'
+name = 'Jorge_Santos'
 folder=name+'\\'
+directorioDeImagenes = '..\lfw\origen'
 path = os.path.dirname(os.path.realpath(__file__))
-path = os.path.join(path,'..\lfw\origen',folder)
+path = os.path.join(path,directorioDeImagenes,folder)
 name = name+'_'
 extension = '.jpg'
 index = 1
