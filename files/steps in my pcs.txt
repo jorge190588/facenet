@@ -1,3 +1,5 @@
+
+
 UBUNTU
 STEP 1
 export PYTHONPATH=/notebooks/src
@@ -6,18 +8,21 @@ export PYTHONPATH=C:\Users\jorge\repository\facenet\files\src
 
 STEP 2
 
-Original
-ubuntu
+Steps of this tutorial
+
+UBUNTU
 for N in {1..4}; do python src/align/align_dataset_mtcnn.py lfw/raw lfw/lfw_mtcnnpy_160 --image_size 160 --margin 32 --random_order --gpu_memory_fraction 0.25 & done
-windows
+
+WINDOWS
 python src/align/align_dataset_mtcnn.py lfw/raw lfw/lfw_mtcnnpy_160 --image_size 160 --margin 32 --random_order --gpu_memory_fraction 0.25
 
-my
-ubuntu 
+Steps in my pcs
+UBUNTU
 for N in {1..4}; do python src/align/align_dataset_mtcnn.py /notebooks/lfw/input /notebooks/lfw/output --image_size 160 --margin 32 --random_order --gpu_memory_fraction 0.25 & done
-windows
-python src/align/align_dataset_mtcnn.py lfw/input lfw/output --image_size 160 --margin 32 --random_order --gpu_memory_fraction 0.25
 
+WINDOWS
+python src/align/align_dataset_mtcnn.py lfw/input lfw/output --image_size 160 --margin 32 --random_order --gpu_memory_fraction 0.25
+python src/align/align_dataset_mtcnn.py lfw/imagenesDeEntrada lfw/imagenesRostros --image_size 160 --margin 32 --random_order --gpu_memory_fraction 0.25
 
 STEP 3
 
@@ -73,3 +78,10 @@ python src/train_softmax.py --logs_base_dir /notebooks/logs/ --models_base_dir /
 
 
 https://github.com/bearsprogrammer/real-time-deep-face-recognition
+
+
+ERROS
+
+ModuleNotFoundError: No module named 'facenet'
+
+You should ser the environment variable the PC.

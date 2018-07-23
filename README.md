@@ -61,7 +61,7 @@ El ejemplo de las imagenes de una carpeta es el siguiente:
 
 5. Ejecutar el archivo "openCamera.py".  Para ejecutar el archivo debemos estar ubicados en la consola de comandos en el directorio "facenet/files/data" y ejecutar el comando siguiente
 
-```
+```sh
 	py openCamera.py
 ```
 
@@ -72,8 +72,22 @@ Al ejectuar el comando anterior debe abrir la camara y grabar 1000 imagenes en l
 ![N|Solid](imagenes/carpetaJorge_Santos.JPG)
 
 
+## 2. Enumerar las imágenes y ordenarlas en formato Parte1_parte2_001.jpg
 
-## 2. Conjunto de imagenes de entrenamiento.
+Las imágenes de la carpeta "imagenesDeEntrada" pueden estar numeradas en la tercera parte del nombre, pero es posible que no sean correlativas, es decir que existe el numero 1,2,3,6 y 7.   Además existe el inconveniente cuando hay mas de 9 imágenes, la forma de listarlas es la siguiente 1,10,2,3.... porque al ser texto, la lista de las imágenes inician con 1.  
+
+En el paso siguiente "verificación" es necesario que las imágenes sean correlativa porque se obtienen dos imagenes de forma aleatoria a partir del rango de imágenes.  El rango es obtenido al listar las imágenes de cada carpeta ordenadas por nombre, es decir que la primera imagen contiene el valor menor del rango y la última imágen contiene el número mayor del rango.    
+
+La solución a este inconveniente es convertir del formato Parte1_parte2_1.png a Parte1_parte2_0001.png, es decir que tenemos un rango de 0 a 9,999.  Los pasos para realizar este proceso es el siguientes:
+
+1. Abrir la consola y ubicarse en la carpeta "facenet/files/data"
+2. ejecutar la sentencia "py renameFiles.py"
+3. abrir la carpeta "facenet/files/lfw/imagenesOrdenadas"
+
+El proceso mueve las imagenes de la carpeta "facenet/files/lfw/imagenesDeEntrada" hacia "facenet/files/lfw/imagenesOrdenadas".
+
+
+## 3. Conjunto de imagenes de entrenamiento.
 
 El conjunto de imagenes recopiladas en el paso previo seran utilizada para generar el conjunto de imagenes de entrenamiento.   El conjunto de imagenes de entrenamiento contiene los rostos de las imagenes originales.   Note la diferencia entre una imagen original y una imagen de entrenamiento.
 
@@ -111,10 +125,10 @@ Ejemplo de la variable de entorno desde windows
 ![N|Solid](imagenes/variableDeEntornoDesdeWindows.jpg)
 
 
-2. Recortar las imagenes originales ejecutando la siguiente sentencia desde la linea de comandos:
+2. Recortar las imagenes originales, debe ubicarse por linea de comandos en el directorio "facenet/files/" ejecutando la siguiente sentencia desde la linea de comandos:
 
 ```
-python src/align/align_dataset_mtcnn.py lfw/imagenesDeEntrada lfw/imagenesRostros --image_size 160 --margin 32 --random_order --gpu_memory_fraction 0.25
+python src/align/align_dataset_mtcnn.py lfw/imagenesOrdenadas lfw/imagenesRostros --image_size 160 --margin 32 --random_order --gpu_memory_fraction 0.25
 ```
 
 El resultado despues de la ejecucion de la sentencia anterior deberia ser similar al siguiente:
@@ -123,36 +137,40 @@ El resultado despues de la ejecucion de la sentencia anterior deberia ser simila
 ![N|Solid](imagenes/resultadoDeImagenesRecortadas.jpg)
 
 
-
-
 ## 3. Crear el archivo pairs.txt
 
+El archivo pairs.txt contiene informacion las imagenes y carpetas elegidas para realizar la validación del modelo.   Para generar el archivo se deben seguir los pasos siguientes:
+
+1. ubicarse en la carpeta "facenet/files/data" por medio de la consola de comandos.
+2. ejecutar el comando "py createPairsFiles.py"
+
+## 4. Ejecutar el proceso de validación
+
+El proceso de validación es para determinar la exactitud del modelo.  Ejecute los comandos siguientes:
+
+1. Ubicarse en la carpeta "facenet/files" por medio de la consola de comandos.
+2. ejecutar la sentencia "py src/validate_on_lfw.py lfw/imagenesRostros models/20180402-114759 --distance_metric 1 --use_flipped_images --subtract_mean --use_fixed_image_standardization --lfw_pair data/pairs.txt  --lfw_batch_size 23"
+
+En este ejemplo hay tres carpetas con 1,000 imágenes cada una, es decir que validamos el modelo con 3,000, el tiempo estimado de entrenamiento es de 30 minutos.
+
+La computador donde se esta probando el ejemplo es una core i5-3210m DE 2.5 GHz y 8GB de RAM.
 
 
+## 5. Abrir el demo 
 
+Para probar el reconocimiento de imágenes debe seguir los pasos siguientes:
 
-## 2. Probar el ejemplo
+1. Ubicarse en la carpeta "facenet/files/src" por medio de la consola de comandos.
+2. Ejectuar el comando "py testfacenet.py"
 
-### Original Example
+A continuación se abre la cámara y ya podemos probar el reconocimiento de imágenes.   Un ejemplo del resultado final es el siguiente:
 
-Ubuntu & Windows
-```
-python src/validate_on_lfw.py lfw/output models/20180402-114759 --distance_metric 1 --use_flipped_images --subtract_mean --use_fixed_image_standardization --lfw_pair data/pairs190.txt  --lfw_batch_size 236
-```
+![N|Solid](imagenes/demoFacenet.jpg)
 
-## 3. Train a classifier on LFW (Custom Example)
-
-### Custom Example
-
-Ubuntu & Windows
-```
-python src/validate_on_lfw.py lfw/output models/20180402-114759 --distance_metric 1 --use_flipped_images --subtract_mean --use_fixed_image_standardization --lfw_pair data/pairs.txt  --lfw_batch_size 44
-```
 
 # Documents
 
 * [Google news](https://www.unocero.com/noticias/ciencia/google-nuestro-sistema-de-reconocimiento-de-rostros-es-el-mejor/)
-* [facenet documentarion](https://arxiv.org/pdf/1503.03832.pdf)
+* [Facenet documentarion](https://arxiv.org/pdf/1503.03832.pdf)
 * [KNN Algoritm](https://www.analiticaweb.es/algoritmo-knn-modelado-datos/)
 * [K-means algoritm](https://es.wikipedia.org/wiki/K-means)
-
