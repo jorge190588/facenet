@@ -30,11 +30,11 @@ El formato para guardar el nombre de una carpeta de de las imagenes se describe 
 
 El ejemplo de las carpetas para el entrenamiento es el siguiente:
 
-![N|Solid](imagenes/carpetaImagenesDeEntrada.JPG)
+![N|Solid](imagenes/carpetaImagenesDeEntrada.jpg)
 
 El ejemplo de las imagenes de una carpeta es el siguiente:
 
-![N|Solid](imagenes/carpetaJorge_Santos.JPG)
+![N|Solid](imagenes/carpetaJorge_Santos.jpg)
 
 
 
@@ -42,21 +42,21 @@ El ejemplo de las imagenes de una carpeta es el siguiente:
 
 1. Crear una carpeta con nombre "imagenesDeEntrada" en el directorio "facenet/files/lfw/"
 
-![N|Solid](imagenes/crearCarpetaImagenesDeEntrada.JPG)
+![N|Solid](imagenes/crearCarpetaImagenesDeEntrada.jpg)
 
 2. Abrir el archivo openCamera.py con un editor de texto, esta ubicado en el directorio "facenet/files/data"
 
-![N|Solid](imagenes/carpetaData.JPG)
+![N|Solid](imagenes/carpetaData.jpg)
 
 
 3.  Cambiar el contenido de la variable "name" con el nombre de la persona de la que queremos capturar un conjunto de imagenes. El contenido de la variable debe tener el formato "Nombre_Apellido", por ejemplo Jorge_Santos
 
-![N|Solid](imagenes/archivoOpenCamera.JPG)
+![N|Solid](imagenes/archivoOpenCamera.jpg)
 
 
 4. Cambiar el contenido de la variable "directorioDeImagenes" por "..\lfw\imagenesDeEntrada"
 
-![N|Solid](imagenes/archivoOpenCamera.JPG)
+![N|Solid](imagenes/archivoOpenCamera.jpg)
 
 
 5. Ejecutar el archivo "openCamera.py".  Para ejecutar el archivo debemos estar ubicados en la consola de comandos en el directorio "facenet/files/data" y ejecutar el comando siguiente
@@ -65,11 +65,11 @@ El ejemplo de las imagenes de una carpeta es el siguiente:
 	py openCamera.py
 ```
 
-![N|Solid](imagenes/ejecutarOpenCamera.JPG)
+![N|Solid](imagenes/ejecutarOpenCamera.jpg)
 
 Al ejectuar el comando anterior debe abrir la camara y grabar 1000 imagenes en la carpeta con nombre Jorge_Santos
 
-![N|Solid](imagenes/carpetaJorge_Santos.JPG)
+![N|Solid](imagenes/carpetaJorge_Santos.jpg)
 
 
 ## 2. Enumerar las imágenes y ordenarlas en formato Parte1_parte2_001.jpg
@@ -94,7 +94,7 @@ El conjunto de imagenes recopiladas en el paso previo seran utilizada para gener
 
 Imagen original
 
-![N|Solid](imagenes/Jorge_Santos_1.JPG)
+![N|Solid](imagenes/Jorge_Santos_1.jpg)
 
 Imagen de entrenamiento
 
