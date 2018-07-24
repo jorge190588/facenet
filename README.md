@@ -155,13 +155,26 @@ En este ejemplo hay tres carpetas con 1,000 imágenes cada una, es decir que val
 
 La computador donde se esta probando el ejemplo es una core i5-3210m DE 2.5 GHz y 8GB de RAM.
 
+Al finalizar el proceso de validación, el resultado debe ser similar al siguiente:
+
+![N|Solid](imagenes/validationStep.jpg)
+
+
+## 5. Crear el clasificador
+
+El clasificador que vamos a crear tiene el nombre "lfw_classifier1000x35.pkl"
+
+1. Ubicarse en la carpeta "facenet/files" por medio de la consola de comandos.
+2. ejecutar el comando "py src/classifier.py TRAIN lfw/imagenesRostros models/20180402-114759/20180402-114759.pb models/20180402-114759/lfw_classifier1000x35.pkl --batch_size 1000 --min_nrof_images_per_class 40 --nrof_train_images_per_class 35 --use_split_dataset"
+
+
 
 ## 5. Abrir el demo 
 
 Para probar el reconocimiento de imágenes debe seguir los pasos siguientes:
 
-1. Ubicarse en la carpeta "facenet/files/src" por medio de la consola de comandos.
-2. Ejectuar el comando "py testfacenet.py"
+1. Ubicarse en la carpeta "facenet/files" por medio de la consola de comandos.
+2. Ejectuar el comando "py src/testfacenet.py"
 
 A continuación se abre la cámara y ya podemos probar el reconocimiento de imágenes.   Un ejemplo del resultado final es el siguiente:
 
