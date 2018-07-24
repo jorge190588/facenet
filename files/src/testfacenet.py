@@ -38,9 +38,10 @@ with tf.Graph().as_default():
         image_size = 182
         input_image_size = 160
         
-        HumanNames = os.listdir(urlBase+"/lfw/imagenesRostros")
+        HumanNames = [name for name in os.listdir(urlBase+"/lfw/imagenesRostros") if name.find(".txt") == -1]
         HumanNames.sort()
-        print(HumanNames)
+        
+        print('Listado de rostros',HumanNames)
 
         print('Loading feature extraction model')
         modeldir = urlBase+'/models/20180402-114759/20180402-114759.pb'
@@ -113,7 +114,7 @@ with tf.Graph().as_default():
 
                             # inner exception
                             if bb[i][0] <= 0 or bb[i][1] <= 0 or bb[i][2] >= len(frame[0]) or bb[i][3] >= len(frame):
-                                print('face is inner of range!')
+                                #print('face is inner of range!')
                                 continue
 
                             cropped.append(frame[bb[i][1]:bb[i][3], bb[i][0]:bb[i][2], :])
@@ -126,13 +127,17 @@ with tf.Graph().as_default():
                             feed_dict = {images_placeholder: scaled_reshape[i], phase_train_placeholder: False}
                             emb_array[0, :] = sess.run(embeddings, feed_dict=feed_dict)
                             predictions = model.predict_proba(emb_array)
-                            #print('predictions: ',predictions)
+                            print('Predicción: ',predictions)
                             best_class_indices = np.argmax(predictions, axis=1)
                             #print('best class indices: ',best_class_indices)
                             best_class_probabilities = predictions[np.arange(len(best_class_indices)), best_class_indices]
-                            #print('best class probabilities: ',best_class_probabilities)
+                            
                             cv2.rectangle(frame, (bb[i][0], bb[i][1]), (bb[i][2], bb[i][3]), (0, 255, 0), 2)    #boxing face
 
+                            if (best_class_probabilities[0] >= 0.75):
+                                print('Mejor probabilidad >= 0.75: ',best_class_probabilities)
+                            else:
+                                print('Mejor probabilidad < 0.75: ',best_class_probabilities)
                             #plot result idx under box
                             text_x = bb[i][0]
                             text_y = bb[i][3] + 20
@@ -146,8 +151,8 @@ with tf.Graph().as_default():
                                     print('name: ',result_names)
                                     cv2.putText(frame, result_names, (text_x, text_y), cv2.FONT_HERSHEY_COMPLEX_SMALL,
                                                 1, (0, 0, 255), thickness=1, lineType=2)
-                    else:
-                        print('Unable to align, no faces')
+                    #else:
+                        #print('Unable to align, no faces')
             
                 sec = curTime - prevTime
                 prevTime = curTime
