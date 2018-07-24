@@ -169,7 +169,7 @@ El clasificador que vamos a crear tiene el nombre "lfw_classifier1000x35.pkl"
 
 
 
-## 5. Abrir el demo 
+## 6. Abrir el demo 
 
 Para probar el reconocimiento de imágenes debe seguir los pasos siguientes:
 
@@ -180,6 +180,10 @@ A continuación se abre la cámara y ya podemos probar el reconocimiento de imá
 
 ![N|Solid](imagenes/demoFacenet.jpg)
 
+
+La consola deberia mostrar mensajes similares a los siguientes:
+
+![N|Solid](imagenes/demoFacenetConsole.jpg)
 
 # Documents
 
