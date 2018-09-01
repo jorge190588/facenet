@@ -191,3 +191,4 @@ La consola deberia mostrar mensajes similares a los siguientes:
 * [Facenet documentarion](https://arxiv.org/pdf/1503.03832.pdf)
 * [KNN Algoritm](https://www.analiticaweb.es/algoritmo-knn-modelado-datos/)
 * [K-means algoritm](https://es.wikipedia.org/wiki/K-means)
+* [Download facenet dataset](http://vis-www.cs.umass.edu/lfw/#download)
