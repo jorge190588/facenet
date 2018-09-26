@@ -5,12 +5,12 @@
 Los requerimientos para trabajar con facenet son:
 
 1. Python
-2. opencv-python==3.4.0.12
+3. actualizar numpy con el comando "pip install --upgrade --force-reinstall --user scikit-learn"
+2. instalar openCv con el comando "pip install opencv-python==3.4.0.12"
 
 Puede utilizar las siguientes guias de referencia:
 
  * [Instalar python y pip](https://github.com/BurntSushi/nfldb/wiki/Python-&-pip-Windows-installation)
-
 
 
 ## 1. Recopilar imagenes para el entrenamiento
