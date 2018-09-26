@@ -4,10 +4,15 @@
 
 Los requerimientos para trabajar con facenet son:
 
-1. Python
-3. actualizar numpy con el comando "pip install --upgrade --force-reinstall --user numpy"
-2. instalar openCv con el comando "pip install opencv-python==3.4.0.12"
-
+1. Python 3.6 (reference: https://www.python.org/downloads/windows/), find "Python 3.6.6 - 2018-06-27" section and select " Windows x86-64 executable installer"
+2. install the dependencies with the following sentences:
+```
+pip install --upgrade --force-reinstall --user numpy
+pip install opencv-python==3.4.0.12
+pip install spicy
+pip install tensorflow
+```
+ 
 Puede utilizar las siguientes guias de referencia:
 
  * [Instalar python y pip](https://github.com/BurntSushi/nfldb/wiki/Python-&-pip-Windows-installation)
