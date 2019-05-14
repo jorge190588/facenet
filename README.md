@@ -4,7 +4,7 @@
 
 Los requerimientos para trabajar con facenet son:
 
-1. Descargar e instalar Python 3.6 (reference: https://www.python.org/downloads/windows/), buscar la seccion "Python 3.6.6 - 2018-06-27" y seleccionar " Windows x86-64 executable installer"
+1. Descargar e instalar Python 3.6, [del sitio oficial](https://www.python.org/downloads/windows/), buscar la seccion "Python 3.6.6 - 2018-06-27" y seleccionar " Windows x86-64 executable installer"
 2. Instalar python 3.6.6 en windows con el asistente, incluir pip.
 3. instalar dependencias para python 3.6.6 desde linea de comandos:
 ```
