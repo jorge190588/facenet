@@ -4,14 +4,24 @@
 
 Los requerimientos para trabajar con facenet son:
 
-1. Python
-2. opencv-python==3.4.0.12
+1. Python 3.6 (reference: https://www.python.org/downloads/windows/), find "Python 3.6.6 - 2018-06-27" section and select " Windows x86-64 executable installer"
+2. install the dependencies with the following sentences:
+```
+python -m pip install --upgrade pip
+py -m pip install scipy
+py -m pip install tensorflow
 
+
+pip install --upgrade --force-reinstall --user numpy
+pip install opencv-python==3.4.0.12
+pip install spicy
+pip install tensorflow
+```
+ 
 Puede utilizar las siguientes guias de referencia:
 
  * [Instalar python y pip](https://github.com/BurntSushi/nfldb/wiki/Python-&-pip-Windows-installation)
  * [Instalar open CV](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_setup/py_setup_in_windows/py_setup_in_windows.html)
-
 
 ## 1. Recopilar imagenes para el entrenamiento
 
