@@ -1,27 +1,33 @@
-# Proyecto facenet
+# Proyecto FACENET
 
 ## Requerimientos técnicos.
 
 Los requerimientos para trabajar con facenet son:
 
-1. Python 3.6 (reference: https://www.python.org/downloads/windows/), find "Python 3.6.6 - 2018-06-27" section and select " Windows x86-64 executable installer"
-2. install the dependencies with the following sentences:
+1. Descargar e instalar Python 3.6 (reference: https://www.python.org/downloads/windows/), buscar la seccion "Python 3.6.6 - 2018-06-27" y seleccionar " Windows x86-64 executable installer"
+2. Instalar python 3.6.6 en windows con el asistente, incluir pip.
+3. instalar dependencias para python 3.6.6 desde linea de comandos:
 ```
-python -m pip install --upgrade pip
+py -m pip install --upgrade pip
 py -m pip install scipy
 py -m pip install tensorflow
-
-
-pip install --upgrade --force-reinstall --user numpy
-pip install opencv-python==3.4.0.12
-pip install spicy
-pip install tensorflow
+py -m pip install opencv-python
+py -m pip install numpy
 ```
- 
-Puede utilizar las siguientes guias de referencia:
 
- * [Instalar python y pip](https://github.com/BurntSushi/nfldb/wiki/Python-&-pip-Windows-installation)
- * [Instalar open CV](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_setup/py_setup_in_windows/py_setup_in_windows.html)
+4. Comprobar si openCv esta correctamente instalado en python 3.6.6
+```
+py
+import cv2
+print(cv2.__version__)
+```
+
+Puede utilizar las siguientes guias de referencia para python 2.7:
+
+ * [Instalar python 2.7 y pip](https://github.com/BurntSushi/nfldb/wiki/Python-&-pip-Windows-installation)
+ * [Instalar open CV en python 2.7](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_setup/py_setup_in_windows/py_setup_in_windows.html)
+ * [Manual para instalar numpy en python 2.7](manuales/numpy/readme.md)
+ * [Manual para instalar matplotlib en python 2.7](manuales/matplotlib/readme.md)
 
 ## 1. Recopilar imagenes para el entrenamiento
 
