@@ -45,6 +45,11 @@ class Camera:
                 break
         self.cap.release()
         cv2.destroyAllWindows()
+    
+    def initPath(self):
+        if not (os.path.exists(self.path)):
+            print("path created")
+            os.makedirs(self.path)
 
     def init(self, args):
         self.first_name  = args.first_name
@@ -58,6 +63,7 @@ class Camera:
         self.path = os.path.dirname(os.path.realpath(__file__))
         self.path = os.path.join(self.path,self.directorioDeImagenes,self.folder+"\\")
         self.cameraNumber = args.cameraNumber
+        self.initPath()
         self.capture()
 
 def parse_arguments(argv):
@@ -76,5 +82,5 @@ if __name__ == '__main__':
     args=parse_arguments(sys.argv[1:])
     camera.init(args)
 # example: py camera.py --first_name jorge --last_name santos --maxFileNumber 10 
-
+# example: py camera.py --first_name jorge --last_name santos --maxFileNumber 10 --directorioDeImagenes ..\imgs\imagenesDeEntrada
    
