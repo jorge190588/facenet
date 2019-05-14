@@ -10,7 +10,7 @@ Los requerimientos para trabajar con facenet son:
 Puede utilizar las siguientes guias de referencia:
 
  * [Instalar python y pip](https://github.com/BurntSushi/nfldb/wiki/Python-&-pip-Windows-installation)
-
+ * [Instalar open CV](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_setup/py_setup_in_windows/py_setup_in_windows.html)
 
 
 ## 1. Recopilar imagenes para el entrenamiento
