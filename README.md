@@ -60,7 +60,6 @@ El ejemplo de las imagenes de una carpeta es el siguiente:
 
 2. Ejecutar el archivo "camera.py", puede usar los parametros:
 
-
 | Parametro | Valor predeterminado | 
 | ------ | ------ | 
 | --first_name | first | 
@@ -71,34 +70,14 @@ El ejemplo de las imagenes de una carpeta es el siguiente:
 | --extension | .jpg | 
 | --cameraNumber | 0 | 
 
-1. Crear una carpeta con nombre "imagenesDeEntrada" en el directorio "facenet/files/lfw/"
+Ejemplos por consola:
+```sh
+* py camera.py --first_name jorge --last_name santos --maxFileNumber 10 
+* py camera.py --first_name jorge --last_name santos --maxFileNumber 10 --directory ..\imgs\imagenesDeEntrada
+```
+El resultado de la ejecucion del archivo camera.py con el directorio predeterminado es el sisguiente:
 
 ![N|Solid](imagenes/crearCarpetaImagenesDeEntrada.jpg)
-
-2. Abrir el archivo openCamera.py con un editor de texto, esta ubicado en el directorio "facenet/files/data"
-
-![N|Solid](imagenes/carpetaData.jpg)
-
-
-3.  Cambiar el contenido de la variable "name" con el nombre de la persona de la que queremos capturar un conjunto de imagenes. El contenido de la variable debe tener el formato "Nombre_Apellido", por ejemplo Jorge_Santos
-
-![N|Solid](imagenes/archivoOpenCamera.jpg)
-
-
-4. Cambiar el contenido de la variable "directorioDeImagenes" por "..\lfw\imagenesDeEntrada"
-
-![N|Solid](imagenes/archivoOpenCamera.jpg)
-
-
-5. Ejecutar el archivo "openCamera.py".  Para ejecutar el archivo debemos estar ubicados en la consola de comandos en el directorio "facenet/files/data" y ejecutar el comando siguiente
-
-```sh
-	py openCamera.py
-```
-
-![N|Solid](imagenes/ejecutarOpenCamera.jpg)
-
-Al ejectuar el comando anterior debe abrir la camara y grabar 1000 imagenes en la carpeta con nombre Jorge_Santos
 
 ![N|Solid](imagenes/carpetaJorge_Santos.jpg)
 
@@ -111,12 +90,13 @@ En el paso siguiente "verificación" es necesario que las imágenes sean correla
 
 La solución a este inconveniente es convertir del formato Parte1_parte2_1.png a Parte1_parte2_0001.png, es decir que tenemos un rango de 0 a 9,999.  Los pasos para realizar este proceso es el siguientes:
 
-1. Abrir la consola y ubicarse en la carpeta "facenet/files/data"
-2. ejecutar la sentencia "py renameFiles.py"
-3. abrir la carpeta "facenet/files/lfw/imagenesOrdenadas"
+1. Abrir la consola y ubicarse en la carpeta "facenet/files/DTL"
+2. ejecutar la sentencia "py orderData.py", los parametros permitidos son:
 
-El proceso mueve las imagenes de la carpeta "facenet/files/lfw/imagenesDeEntrada" hacia "facenet/files/lfw/imagenesOrdenadas".
-
+| Parametro | Valor predeterminado | 
+| ------ | ------ | 
+| --inputDirectory | ..\\lfw\\imagenesDeEntrada\\ | 
+| --outputDirectory | ..\\lfw\\imagenesOrdenadas | 
 
 ## 3. Conjunto de imagenes de entrenamiento.
 
