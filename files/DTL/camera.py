@@ -9,7 +9,7 @@ class Camera:
         self.name=""
         self.index=0
         self.maxFileNumber=0
-        self.directorioDeImagenes = ""
+        self.directory = ""
         self.path=""
         self.extension=""
         self.cameraNumber=0
@@ -44,14 +44,14 @@ class Camera:
     def init(self, args):
         self.first_name  = args.first_name
         self.last_name  = args.last_name
-        self.directorioDeImagenes = args.directorioDeImagenes
+        self.directory = args.directory
         self.extension= args.extension
         self.index = args.index
         self.maxFileNumber = args.maxFileNumber
         self.folder=args.first_name+"_"+args.last_name
         self.name=args.first_name+"_"+args.last_name
         self.path = os.path.dirname(os.path.realpath(__file__))
-        self.path = os.path.join(self.path,self.directorioDeImagenes,self.folder+"\\")
+        self.path = os.path.join(self.path,self.directory,self.folder+"\\")
         self.cameraNumber = args.cameraNumber
         self.initPath()
         self.capture()
@@ -60,7 +60,7 @@ def parse_arguments(argv):
     parser = argparse.ArgumentParser()
     parser.add_argument('--first_name', type=str, help='First name', default="first")
     parser.add_argument('--last_name', type=str, help='Last name', default="last")
-    parser.add_argument('--directorioDeImagenes', type=str, help='directorioDeImagenes', default='..\lfw\imagenesDeEntrada')
+    parser.add_argument('--directory', type=str, help='directory', default='..\lfw\imagenesDeEntrada')
     parser.add_argument('--index', type=int, help='Index', default=1)
     parser.add_argument('--maxFileNumber', type=int, help='maxFileNumber', default=1)
     parser.add_argument('--extension', type=str, help='extension', default=".jpg")
@@ -73,5 +73,5 @@ if __name__ == '__main__':
     camera.init(args)
 
 # example: py camera.py --first_name jorge --last_name santos --maxFileNumber 10 
-# example: py camera.py --first_name jorge --last_name santos --maxFileNumber 10 --directorioDeImagenes ..\imgs\imagenesDeEntrada
+# example: py camera.py --first_name jorge --last_name santos --maxFileNumber 10 --directory ..\imgs\imagenesDeEntrada
    
