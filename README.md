@@ -56,6 +56,21 @@ El ejemplo de las imagenes de una carpeta es el siguiente:
 
 ### Pasos para capturar imagenes por medio de la camara.
 
+1. Ubicarse en el directorio /facenet/files/DTL/ por medio de la consola.
+
+2. Ejecutar el archivo "camera.py", puede usar los parametros:
+
+
+| Parametro | Valor predeterminado | 
+| ------ | ------ | 
+| --first_name | first | 
+| --last_name | last | 
+| --directory | ..\lfw\imagenesDeEntrada | 
+| --index | 1 | 
+| --maxFileNumber | 1 | 
+| --extension | .jpg | 
+| --cameraNumber | 0 | 
+
 1. Crear una carpeta con nombre "imagenesDeEntrada" en el directorio "facenet/files/lfw/"
 
 ![N|Solid](imagenes/crearCarpetaImagenesDeEntrada.jpg)
