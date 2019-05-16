@@ -9,10 +9,12 @@ Los requerimientos para trabajar con facenet son:
 3. instalar dependencias para python 3.6.6 desde linea de comandos:
 ```
 py -m pip install --upgrade pip
-py -m pip install scipy
-py -m pip install tensorflow
+py -m pip install scipy==1.1.0
+py -m pip install tensorflow==1.13.1
 py -m pip install opencv-python
-py -m pip install numpy
+py -m pip install numpy==1.14.5
+py -m pip install sklearn==0.21.1
+py -m pip install Pillow==6.0.0
 ```
 
 4. Comprobar si openCv esta correctamente instalado en python 3.6.6
@@ -28,6 +30,7 @@ Puede utilizar las siguientes guias de referencia para python 2.7:
  * [Instalar open CV en python 2.7](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_setup/py_setup_in_windows/py_setup_in_windows.html)
  * [Manual para instalar numpy en python 2.7](manuales/numpy/readme.md)
  * [Manual para instalar matplotlib en python 2.7](manuales/matplotlib/readme.md)
+ * [How To Fix MSVCP140 DLL Is Missing Error On Windows 7 , Windows 10, Windows 8](https://www.youtube.com/watch?v=2o3PTH-Wzmk), [link directo del sitio](https://www.softsuggester.com/msvcp140-dll-is-missing-fix/#Guaranteed_Working_Solution), el nombre del archivo a descargar es "Visual C++ Redist Installer V56"
 
 ## 1. Recopilar imagenes para el entrenamiento
 
