@@ -142,7 +142,7 @@ Ejemplo de la variable de entorno desde windows
 2. Recortar las imagenes originales, debe ubicarse por linea de comandos en el directorio "facenet/files/" ejecutando la siguiente sentencia desde la linea de comandos:
 
 ```
-python src/align/align_dataset_mtcnn.py lfw/imagenesOrdenadas lfw/imagenesRostros --image_size 160 --margin 32 --random_order --gpu_memory_fraction 0.25
+py src/align/align_dataset_mtcnn.py lfw/imagenesOrdenadas lfw/imagenesRostros --image_size 160 --margin 32 --random_order --gpu_memory_fraction 0.25
 ```
 
 El resultado despues de la ejecucion de la sentencia anterior deberia ser similar al siguiente:
@@ -151,14 +151,14 @@ El resultado despues de la ejecucion de la sentencia anterior deberia ser simila
 ![N|Solid](imagenes/resultadoDeImagenesRecortadas.jpg)
 
 
-## 3. Crear el archivo pairs.txt
+### 4. Crear el archivo pairs.txt
 
 El archivo pairs.txt contiene informacion las imagenes y carpetas elegidas para realizar la validación del modelo.   Para generar el archivo se deben seguir los pasos siguientes:
 
 1. ubicarse en la carpeta "facenet/files/data" por medio de la consola de comandos.
 2. ejecutar el comando "py createPairsFiles.py"
 
-## 4. Ejecutar el proceso de validación
+## 5. Ejecutar el proceso de validación
 
 El proceso de validación es para determinar la exactitud del modelo.  Ejecute los comandos siguientes:
 
