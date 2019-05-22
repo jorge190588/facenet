@@ -11,7 +11,7 @@ Los requerimientos para trabajar con facenet son:
 py -m pip install --upgrade pip
 py -m pip install scipy==1.1.0
 py -m pip install tensorflow==1.13.1
-py -m pip install opencv-python
+py -m pip install opencv-python==4.1.0
 py -m pip install numpy==1.14.5
 py -m pip install sklearn==0.21.1
 py -m pip install Pillow==6.0.0
