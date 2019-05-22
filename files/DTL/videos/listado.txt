@@ -1,5 +1,6 @@
 Jose_Mourinho
 https://www.youtube.com/watch?v=QB8KHoR-kNY
+
 py video.py --videoFolder  videos --videoName Jose_Mourinho --maxFileNumber 5 --startInFrame 100
 
 Cristiano_Ronaldo
@@ -10,7 +11,14 @@ py video.py --videoFolder  videos --videoName Cristiano_Ronaldo1 --maxFileNumber
 
 Iker_Casillas
 https://www.youtube.com/watch?v=PQTKHm1kqOg
+
+py video.py --videoFolder  videos --videoName Iker_Casillas --maxFileNumber 1000 --startInFrame 100
+
 Keylor_Navas
 https://www.youtube.com/watch?v=fr-BQ96GGh4
+
+py video.py --videoFolder  videos --videoName Keylor_Navas --maxFileNumber 1000 --startInFrame 220
+
+
 Zinedine_Zidane
 https://www.youtube.com/watch?v=m21c-CMlT9M
