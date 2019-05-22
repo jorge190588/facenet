@@ -70,8 +70,8 @@ class Video:
 
 def parse_arguments(argv):
     parser = argparse.ArgumentParser()
-    parser.add_argument('--videoFolder', type=str, help='Video folder', default="video folder")
-    parser.add_argument('--videoName', type=str, help='Video name', default="video name")
+    parser.add_argument('--videoFolder', type=str, help='Video folder', default="video")
+    parser.add_argument('videoName', type=str, help='Video name', default="videoName")
     parser.add_argument('--videoExtension', type=str, help='Video extension', default=".mp4")
     parser.add_argument('--outDirectory', type=str, help='directory', default='..\lfw\imagenesDeEntrada')
     parser.add_argument('--index', type=int, help='Index', default=1)
