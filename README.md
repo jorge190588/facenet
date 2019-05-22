@@ -84,6 +84,35 @@ El resultado de la ejecucion del archivo camera.py con el directorio predetermin
 
 ![N|Solid](imagenes/carpetaJorge_Santos.jpg)
 
+### Pasos para capturar imagenes por medio de un video
+
+1. Ubicarse en el directorio /facenet/files/DTL/ por medio de la consola.
+
+2. Ejecutar el archivo "video.py", puede usar los parametros:
+
+| Parametro | Valor predeterminado | 
+| ------ | ------ | 
+| --videoName | videoName | 
+| --videoExtension | .mp4 | 
+| --videoFolder | video | 
+| --outDirectory | ..\lfw\imagenesDeEntrada | 
+| --index | 1 | 
+| --maxFileNumber | 1 | 
+| --imageExtension | .jpg | 
+| --imageName |  | 
+| --startInFrame | .jpg | 
+| --cameraNumber | 0 | 
+
+Ejemplos por consola:
+```sh
+* py video.py --videoFolder  videos --videoName Jose_Mourinho --maxFileNumber 5 --startInFrame 100 
+* py video.py --videoFolder  videos --videoName Cristiano_Ronaldo1 --maxFileNumber 1000 --startInFrame 100 --imageName Cristiano_Ronaldo
+```
+El resultado de la ejecucion del archivo video.py es el sisguiente:
+
+![N|Solid](imagenes/crearCarpetaImagenesDeEntrada.jpg)
+
+![N|Solid](imagenes/carpetaJorge_Santos.jpg)
 
 ## 2. Enumerar las imágenes y ordenarlas en formato Parte1_parte2_001.jpg
 
