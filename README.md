@@ -185,10 +185,10 @@ El resultado despues de la ejecucion de la sentencia anterior deberia ser simila
 
 El archivo pairs.txt contiene informacion las imagenes y carpetas elegidas para realizar la validación del modelo.   Para generar el archivo se deben seguir los pasos siguientes:
 
-1. Usando una consola debe ubicarse en la carpeta "files/data" y ejecutar el comando "py createPairsFiles.py"
-2. Usando la consola debe ubicarse en la raiz del proyecto y ejecutar el comando"py files/data/createPairsFiles.py"
+1. Usando una consola debe ubicarse en la carpeta "files/pairFile" y ejecutar el comando "py createPairsFiles.py"
+2. Usando la consola debe ubicarse en la raiz del proyecto y ejecutar el comando"py files/pairFile/createPairsFiles.py"
 
-Despues de ejecutar la opcion 1 o 2 debe visualizar la carpeta files/data el archivo pairs.txt 
+Despues de ejecutar la opcion 1 o 2 debe visualizar la carpeta files/pairFile el archivo pairs.txt 
 
 Los parametros opcionales para ejecutar el archivo createPairsFiles.py son los siguientes:
 
@@ -205,7 +205,7 @@ Los parametros opcionales para ejecutar el archivo createPairsFiles.py son los s
 El proceso de validación es para determinar la exactitud del modelo.  Ejecute los comandos siguientes:
 
 1. Ubicarse en la carpeta "facenet/files" por medio de la consola de comandos.
-2. ejecutar la sentencia "py src/validate_on_lfw.py lfw/imagenesRostros models/20180402-114759 --distance_metric 1 --use_flipped_images --subtract_mean --use_fixed_image_standardization --lfw_pair data/pairs.txt  --lfw_batch_size 23"
+2. ejecutar la sentencia "py src/validate_on_lfw.py lfw/imagenesRostros models/20180402-114759 --distance_metric 1 --use_flipped_images --subtract_mean --use_fixed_image_standardization --lfw_pair pairFile/pairs.txt  --lfw_batch_size 23"
 
 En este ejemplo hay tres carpetas con 1,000 imágenes cada una, es decir que validamos el modelo con 3,000, el tiempo estimado de entrenamiento es de 30 minutos.
 
