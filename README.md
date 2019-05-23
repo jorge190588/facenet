@@ -15,6 +15,7 @@ py -m pip install opencv-python==4.1.0
 py -m pip install numpy==1.14.5
 py -m pip install sklearn==0.21.1
 py -m pip install Pillow==6.0.0
+py -m pip install matplotlib==3.1.0
 ```
 
 4. Comprobar si openCv esta correctamente instalado en python 3.6.6
@@ -184,8 +185,20 @@ El resultado despues de la ejecucion de la sentencia anterior deberia ser simila
 
 El archivo pairs.txt contiene informacion las imagenes y carpetas elegidas para realizar la validación del modelo.   Para generar el archivo se deben seguir los pasos siguientes:
 
-1. ubicarse en la carpeta "facenet/files/data" por medio de la consola de comandos.
-2. ejecutar el comando "py createPairsFiles.py"
+1. Usando una consola debe ubicarse en la carpeta "files/data" y ejecutar el comando "py createPairsFiles.py"
+2. Usando la consola debe ubicarse en la raiz del proyecto y ejecutar el comando"py files/data/createPairsFiles.py"
+
+Despues de ejecutar la opcion 1 o 2 debe visualizar la carpeta files/data el archivo pairs.txt 
+
+Los parametros opcionales para ejecutar el archivo createPairsFiles.py son los siguientes:
+
+
+| Parametro | Valor predeterminado | 
+| ------ | ------ | 
+| --baseDir | ../lfw/imageneesRostros/ | 
+| --filePath | pairs.txt | 
+| --separate | _0 | 
+
 
 ## 5. Ejecutar el proceso de validación
 
@@ -196,7 +209,7 @@ El proceso de validación es para determinar la exactitud del modelo.  Ejecute l
 
 En este ejemplo hay tres carpetas con 1,000 imágenes cada una, es decir que validamos el modelo con 3,000, el tiempo estimado de entrenamiento es de 30 minutos.
 
-La computador donde se esta probando el ejemplo es una core i5-3210m DE 2.5 GHz y 8GB de RAM.
+La computadora endonde se esta probando el ejemplo es una core i5-3210m DE 2.5 GHz y 8GB de RAM.
 
 Al finalizar el proceso de validación, el resultado debe ser similar al siguiente:
 
