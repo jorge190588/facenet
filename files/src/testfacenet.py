@@ -2,39 +2,26 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import tensorflow as tf
+import tensorflow as tf, cv2, os, matplotlib.pyplot as plt, numpy as np, argparse, sys, time, copy, math, pickle
 from scipy import misc
-import cv2
-import matplotlib.pyplot as plt
-import numpy as np
-import argparse
 import facenet
 import align.detect_face
-import os
 from os.path import join as pjoin
-import sys
-import time
-import copy
-import math
-import pickle
 from sklearn.svm import SVC
 from sklearn.externals import joblib
 
 print('Creating networks and loading parameters')
-urlBase = 'C:/Users/jorge/repository/facenet/files'
-# urlBase = '/notebooks'
+urlBase = 'C:/Users/erick/repository/facenet/files'
 with tf.Graph().as_default():
     gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.6)
     sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options, log_device_placement=False))
     with sess.as_default():
         pnet, rnet, onet = align.detect_face.create_mtcnn(sess, urlBase+'/src/align/')
-
         minsize = 20  # minimum size of face
         threshold = [0.6, 0.7, 0.7]  # three steps's threshold
         factor = 0.709  # scale factor
         margin = 44
         frame_interval = 3
-        batch_size = 1000
         image_size = 182
         input_image_size = 160
         
@@ -67,7 +54,6 @@ with tf.Graph().as_default():
             video_capture = cv2.VideoCapture(0) #'./test.mp4'
             video_capture.set(3,4920)
             video_capture.set(4,3080)
-
             c = 0
 
             # #video writer
@@ -81,7 +67,6 @@ with tf.Graph().as_default():
                 #if (frame != None):
                 
                 frame = cv2.resize(frame, (0,0), fx=0.5, fy=0.5)    #resize frame (optional)
-
                 curTime = time.time()+1    # calc fps
                 timeF = frame_interval
 
