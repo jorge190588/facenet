@@ -131,46 +131,46 @@ class TestFacenet:
 
                             if numberOfFacesDeteted > 0:
                                 print('Detected Face Number: %d' % numberOfFacesDeteted)
-                                det = boundingBoxesOfDetectedFaces[:, 0:4]
+                                boundingBoxesOfDetectedFacesWith4Positions = boundingBoxesOfDetectedFaces[:, 0:4]
                                 img_size = np.asarray(frame.shape)[0:2]
                                 cropped = []
                                 scaled = []
                                 scaled_reshape = []
                                 bb = np.zeros((numberOfFacesDeteted,4), dtype=np.int32)
                                 
-                                for i in range(numberOfFacesDeteted):
+                                for indexOfFaceDetected in range(numberOfFacesDeteted):
                                     emb_array = np.zeros((1, embedding_size))
-                                    bb[i][0] = det[i][0]
-                                    bb[i][1] = det[i][1]
-                                    bb[i][2] = det[i][2]
-                                    bb[i][3] = det[i][3]
+                                    bb[indexOfFaceDetected][0] = boundingBoxesOfDetectedFacesWith4Positions[indexOfFaceDetected][0]
+                                    bb[indexOfFaceDetected][1] = boundingBoxesOfDetectedFacesWith4Positions[indexOfFaceDetected][1]
+                                    bb[indexOfFaceDetected][2] = boundingBoxesOfDetectedFacesWith4Positions[indexOfFaceDetected][2]
+                                    bb[indexOfFaceDetected][3] = boundingBoxesOfDetectedFacesWith4Positions[indexOfFaceDetected][3]
 
                                     # inner exception
-                                    if bb[i][0] <= 0 or bb[i][1] <= 0 or bb[i][2] >= len(frame[0]) or bb[i][3] >= len(frame):
+                                    if bb[indexOfFaceDetected][0] <= 0 or bb[indexOfFaceDetected][1] <= 0 or bb[indexOfFaceDetected][2] >= len(frame[0]) or bb[indexOfFaceDetected][3] >= len(frame):
                                         #print('face is inner of range!')
                                         continue
 
-                                    cropped.append(frame[bb[i][1]:bb[i][3], bb[i][0]:bb[i][2], :])
-                                    cropped[i] = facenet.flip(cropped[i], False)
-                                    scaled.append(misc.imresize(cropped[i], (image_size, image_size), interp='bilinear'))
-                                    scaled[i] = cv2.resize(scaled[i], (input_image_size,input_image_size),
+                                    cropped.append(frame[bb[indexOfFaceDetected][1]:bb[indexOfFaceDetected][3], bb[indexOfFaceDetected][0]:bb[indexOfFaceDetected][2], :])
+                                    cropped[indexOfFaceDetected] = facenet.flip(cropped[indexOfFaceDetected], False)
+                                    scaled.append(misc.imresize(cropped[indexOfFaceDetected], (image_size, image_size), interp='bilinear'))
+                                    scaled[indexOfFaceDetected] = cv2.resize(scaled[indexOfFaceDetected], (input_image_size,input_image_size),
                                                             interpolation=cv2.INTER_CUBIC)
-                                    scaled[i] = facenet.prewhiten(scaled[i])
-                                    scaled_reshape.append(scaled[i].reshape(-1,input_image_size,input_image_size,3))
-                                    feed_dict = {images_placeholder: scaled_reshape[i], phase_train_placeholder: False}
+                                    scaled[indexOfFaceDetected] = facenet.prewhiten(scaled[indexOfFaceDetected])
+                                    scaled_reshape.append(scaled[indexOfFaceDetected].reshape(-1,input_image_size,input_image_size,3))
+                                    feed_dict = {images_placeholder: scaled_reshape[indexOfFaceDetected], phase_train_placeholder: False}
                                     emb_array[0, :] = sess.run(embeddings, feed_dict=feed_dict)
                                     predictions = model.predict_proba(emb_array)
                                     print('Predicción: ',predictions)
                                     best_class_indices = np.argmax(predictions, axis=1)
                                     #print('best class indices: ',best_class_indices)
                                     best_class_probabilities = predictions[np.arange(len(best_class_indices)), best_class_indices]
-                                    self.printRectangleToImage(frame,bb[i][0], bb[i][1],bb[i][2], bb[i][3], "green")
+                                    self.printRectangleToImage(frame,bb[indexOfFaceDetected][0], bb[indexOfFaceDetected][1],bb[indexOfFaceDetected][2], bb[indexOfFaceDetected][3], "green")
                                     if (best_class_probabilities[0] >= 0.75):
                                         print('Mejor probabilidad >= 0.75: ',best_class_probabilities[0])
                                     else:
                                         print('Mejor probabilidad < 0.75: ',best_class_probabilities[0])
-                                    text_x = bb[i][0]
-                                    text_y = bb[i][3] + 20
+                                    text_x = bb[indexOfFaceDetected][0]
+                                    text_y = bb[indexOfFaceDetected][3] + 20
                                     
                                     faceName = self.getFaceNameFromFacesListByIndex(facesList, best_class_indices[0])
                                     self.printTextToImage(frame,faceName,text_x,text_y,"red" )
