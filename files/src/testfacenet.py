@@ -35,7 +35,7 @@ class TestFacenet:
         if (self.checkIfDirectoryExists("Model path", self.modelFilePath)) is False: return False
         if (self.checkIfDirectoryExists("Pair file path", self.pairFilePath)) is False: return False
         self.runTest()
-
+        
     def checkIfDirectoryExists(self, name, path):
         if not (os.path.exists(path)):
             print("The",name,"doesn't exists in the path ",path)
@@ -44,7 +44,20 @@ class TestFacenet:
     
     def getHumanNames(self):
         HumanNames = [name for name in os.listdir(self.facesDirectory) if name.find(".txt") == -1]
-        return HumanNames.sort()
+        HumanNames.sort()
+        return HumanNames
+    
+    def printTextToImage(self, image, text, position_x, position_y, colorName):
+        if (colorName is "black"):
+            colorR=0
+            colorG=0
+            colorB=0
+        if (colorName is "red"):
+            colorR=0
+            colorG=0
+            colorB=255
+
+        cv2.putText(image, text, (position_x, position_y),cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (colorR, colorG, colorB), thickness=1, lineType=2)        
 
     def runTest(self):    
         print('Creating networks and loading parameters')
@@ -111,6 +124,7 @@ class TestFacenet:
                                 scaled = []
                                 scaled_reshape = []
                                 bb = np.zeros((nrof_faces,4), dtype=np.int32)
+                                
                                 for i in range(nrof_faces):
                                     emb_array = np.zeros((1, embedding_size))
                                     bb[i][0] = det[i][0]
@@ -137,37 +151,34 @@ class TestFacenet:
                                     best_class_indices = np.argmax(predictions, axis=1)
                                     #print('best class indices: ',best_class_indices)
                                     best_class_probabilities = predictions[np.arange(len(best_class_indices)), best_class_indices]
-                                    
+                                    # dibujar un rectangulo en el frame
+
                                     cv2.rectangle(frame, (bb[i][0], bb[i][1]), (bb[i][2], bb[i][3]), (0, 255, 0), 2)    #boxing face
 
                                     if (best_class_probabilities[0] >= 0.75):
-                                        print('Mejor probabilidad >= 0.75: ',best_class_probabilities)
+                                        print('Mejor probabilidad >= 0.75: ',best_class_probabilities[0])
                                     else:
-                                        print('Mejor probabilidad < 0.75: ',best_class_probabilities)
+                                        print('Mejor probabilidad < 0.75: ',best_class_probabilities[0])
                                     #plot result idx under box
                                     text_x = bb[i][0]
                                     text_y = bb[i][3] + 20
                                     #print('result: ', best_class_indices[0])
                                     #print(best_class_indices)
-                                    #print(HumanNames)
                                     for H_i in HumanNames:
-                                        #print(H_i)
                                         if HumanNames[best_class_indices[0]] == H_i:
                                             result_names = HumanNames[best_class_indices[0]]
-                                            print('name: ',result_names)
-                                            cv2.putText(frame, result_names, (text_x, text_y), cv2.FONT_HERSHEY_COMPLEX_SMALL,
-                                                        1, (0, 0, 255), thickness=1, lineType=2)
+                                            print("name: ",result_names+" x: "+str(text_x)+" t: "+str(text_y))
+                                            self.printTextToImage(frame,result_names,text_x,text_y,"red" )
                             #else:
                                 #print('Unable to align, no faces')
                     
                         sec = curTime - prevTime
                         prevTime = curTime
                         fps = 1 / (sec)
-                        str = 'FPS: %2.3f' % fps
+                        strFPS = 'FPS: %2.3f' % fps
                         text_fps_x = len(frame[0]) - 150
                         text_fps_y = 20
-                        cv2.putText(frame, str, (text_fps_x, text_fps_y),
-                                    cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 0, 0), thickness=1, lineType=2)
+                        self.printTextToImage(frame,strFPS,text_fps_x,text_fps_y,"black" )
                         # c+=1
                         cv2.imshow('Video', frame)
 
