@@ -42,11 +42,18 @@ class TestFacenet:
             return False
         return True
     
-    def getHumanNames(self):
-        HumanNames = [name for name in os.listdir(self.facesDirectory) if name.find(".txt") == -1]
-        HumanNames.sort()
-        return HumanNames
-    
+    def getFacesList(self):
+        facesList = [name for name in os.listdir(self.facesDirectory) if name.find(".txt") == -1]
+        facesList.sort()
+        return facesList
+
+    def getFaceNameFromFacesListByIndex(self, facesList, findIndex ):
+        for indexOfFacesList in facesList:
+            if facesList[findIndex] == indexOfFacesList:
+                faceName=facesList[findIndex]
+                return faceName
+        return "Not detected"
+
     def printTextToImage(self, image, text, position_x, position_y, colorName):
         if (colorName is "black"):
             colorR=0
@@ -56,8 +63,14 @@ class TestFacenet:
             colorR=0
             colorG=0
             colorB=255
-
         cv2.putText(image, text, (position_x, position_y),cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (colorR, colorG, colorB), thickness=1, lineType=2)        
+
+    def printRectangleToImage(self, image,position_x1,position_y1,position_x2,position_y2, colorName):
+        if (colorName is "green"):
+            colorR=0
+            colorG=255
+            colorB=0
+        cv2.rectangle(image, (position_x1, position_y1), (position_x2, position_y2), (colorR, colorG, colorB), 2)
 
     def runTest(self):    
         print('Creating networks and loading parameters')
@@ -73,8 +86,8 @@ class TestFacenet:
                 frame_interval = 3
                 image_size = 182
                 input_image_size = 160                
-                HumanNames = self.getHumanNames()
-                print('Listado de rostros',HumanNames)
+                facesList = self.getFacesList()
+                print('Listado de rostros',facesList)
                 facenet.load_model(self.modelFilePath)
                 images_placeholder = tf.get_default_graph().get_tensor_by_name("input:0")
                 embeddings = tf.get_default_graph().get_tensor_by_name("embeddings:0")
@@ -113,19 +126,19 @@ class TestFacenet:
                             if frame.ndim == 2:
                                 frame = facenet.to_rgb(frame)
                             frame = frame[:, :, 0:3]
-                            bounding_boxes, _ = align.detect_face.detect_face(frame, minsize, pnet, rnet, onet, threshold, factor)
-                            nrof_faces = bounding_boxes.shape[0]
+                            boundingBoxesOfDetectedFaces, _ = align.detect_face.detect_face(frame, minsize, pnet, rnet, onet, threshold, factor)
+                            numberOfFacesDeteted = boundingBoxesOfDetectedFaces.shape[0]
 
-                            if nrof_faces > 0:
-                                print('Detected Face Number: %d' % nrof_faces)
-                                det = bounding_boxes[:, 0:4]
+                            if numberOfFacesDeteted > 0:
+                                print('Detected Face Number: %d' % numberOfFacesDeteted)
+                                det = boundingBoxesOfDetectedFaces[:, 0:4]
                                 img_size = np.asarray(frame.shape)[0:2]
                                 cropped = []
                                 scaled = []
                                 scaled_reshape = []
-                                bb = np.zeros((nrof_faces,4), dtype=np.int32)
+                                bb = np.zeros((numberOfFacesDeteted,4), dtype=np.int32)
                                 
-                                for i in range(nrof_faces):
+                                for i in range(numberOfFacesDeteted):
                                     emb_array = np.zeros((1, embedding_size))
                                     bb[i][0] = det[i][0]
                                     bb[i][1] = det[i][1]
@@ -151,24 +164,17 @@ class TestFacenet:
                                     best_class_indices = np.argmax(predictions, axis=1)
                                     #print('best class indices: ',best_class_indices)
                                     best_class_probabilities = predictions[np.arange(len(best_class_indices)), best_class_indices]
-                                    # dibujar un rectangulo en el frame
-
-                                    cv2.rectangle(frame, (bb[i][0], bb[i][1]), (bb[i][2], bb[i][3]), (0, 255, 0), 2)    #boxing face
-
+                                    self.printRectangleToImage(frame,bb[i][0], bb[i][1],bb[i][2], bb[i][3], "green")
                                     if (best_class_probabilities[0] >= 0.75):
                                         print('Mejor probabilidad >= 0.75: ',best_class_probabilities[0])
                                     else:
                                         print('Mejor probabilidad < 0.75: ',best_class_probabilities[0])
-                                    #plot result idx under box
                                     text_x = bb[i][0]
                                     text_y = bb[i][3] + 20
-                                    #print('result: ', best_class_indices[0])
-                                    #print(best_class_indices)
-                                    for H_i in HumanNames:
-                                        if HumanNames[best_class_indices[0]] == H_i:
-                                            result_names = HumanNames[best_class_indices[0]]
-                                            print("name: ",result_names+" x: "+str(text_x)+" t: "+str(text_y))
-                                            self.printTextToImage(frame,result_names,text_x,text_y,"red" )
+                                    
+                                    faceName = self.getFaceNameFromFacesListByIndex(facesList, best_class_indices[0])
+                                    self.printTextToImage(frame,faceName,text_x,text_y,"red" )
+                                    print("face ", faceName)
                             #else:
                                 #print('Unable to align, no faces')
                     
