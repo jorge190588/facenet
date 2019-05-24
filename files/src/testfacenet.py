@@ -72,6 +72,15 @@ class TestFacenet:
             colorB=0
         cv2.rectangle(image, (position_x1, position_y1), (position_x2, position_y2), (colorR, colorG, colorB), 2)
 
+    def getModel(self):
+        classifierFilePath = os.path.expanduser(self.pairFilePath)
+        with open(classifierFilePath, 'rb') as infile:
+            u = pickle._Unpickler(infile)
+            u.encoding = 'latin1'
+            (model, class_names) = u.load()
+            print('load classifier file-> %s' % classifierFilePath)
+        return model
+
     def runTest(self):    
         print('Creating networks and loading parameters')
         with tf.Graph().as_default():
@@ -79,10 +88,10 @@ class TestFacenet:
             sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options, log_device_placement=False))
             with sess.as_default():
                 pnet, rnet, onet = align.detect_face.create_mtcnn(sess, self.alignDirectory)
-                minsize = 20  # minimum size of face
+                minimunSizeOfFace = 20
+                scaleFactor = 0.709
                 threshold = [0.6, 0.7, 0.7]  # three steps's threshold
-                factor = 0.709  # scale factor
-                margin = 44
+                # margin = 44
                 frame_interval = 3
                 image_size = 182
                 input_image_size = 160                
@@ -93,15 +102,8 @@ class TestFacenet:
                 embeddings = tf.get_default_graph().get_tensor_by_name("embeddings:0")
                 phase_train_placeholder = tf.get_default_graph().get_tensor_by_name("phase_train:0")
                 embedding_size = embeddings.get_shape()[1]
-                classifier_filename_exp = os.path.expanduser(self.pairFilePath)
-                print("classifier is load ")
                 try:
-                    with open(classifier_filename_exp, 'rb') as infile:
-                        u = pickle._Unpickler(infile)
-                        u.encoding = 'latin1'
-                        (model, class_names) = u.load()
-                        #(model, class_names) = infile.load()
-                        print('load classifier file-> %s' % classifier_filename_exp)
+                    model =self.getModel()
 
                     video_capture = cv2.VideoCapture(0) #'./test.mp4'
                     video_capture.set(3,4920)
@@ -117,7 +119,7 @@ class TestFacenet:
                     while True:
                         ret, frame = video_capture.read()
                         #if (frame != None):
-                        frame = cv2.resize(frame, (0,0), fx=0.5, fy=0.5)    #resize frame (optional)
+                        frame = cv2.resize(frame, (0,0), fx=0.7, fy=0.7)    #resize frame (optional)
                         curTime = time.time()+1    # calc fps
                         timeF = frame_interval
 
@@ -126,54 +128,55 @@ class TestFacenet:
                             if frame.ndim == 2:
                                 frame = facenet.to_rgb(frame)
                             frame = frame[:, :, 0:3]
-                            boundingBoxesOfDetectedFaces, _ = align.detect_face.detect_face(frame, minsize, pnet, rnet, onet, threshold, factor)
-                            numberOfFacesDeteted = boundingBoxesOfDetectedFaces.shape[0]
-
+                            boundingBoxesOfAllDetectedFaces, _ = align.detect_face.detect_face(frame, minimunSizeOfFace, pnet, rnet, onet, threshold, scaleFactor)
+                            numberOfFacesDeteted = boundingBoxesOfAllDetectedFaces.shape[0]
+                            self.printTextToImage(frame,"No. Faces "+str(numberOfFacesDeteted),20,20,"black" )
                             if numberOfFacesDeteted > 0:
-                                print('Detected Face Number: %d' % numberOfFacesDeteted)
-                                boundingBoxesOfDetectedFacesWith4Positions = boundingBoxesOfDetectedFaces[:, 0:4]
-                                img_size = np.asarray(frame.shape)[0:2]
+                                boundingBoxesOfDetectedFacesWith4Positions = boundingBoxesOfAllDetectedFaces[:, 0:4]
+                                # img_size = np.asarray(frame.shape)[0:2]
                                 cropped = []
                                 scaled = []
                                 scaled_reshape = []
-                                bb = np.zeros((numberOfFacesDeteted,4), dtype=np.int32)
+                                boundingBoxesOfDetectedFace = np.zeros((numberOfFacesDeteted,4), dtype=np.int32)
                                 
                                 for indexOfFaceDetected in range(numberOfFacesDeteted):
                                     emb_array = np.zeros((1, embedding_size))
-                                    bb[indexOfFaceDetected][0] = boundingBoxesOfDetectedFacesWith4Positions[indexOfFaceDetected][0]
-                                    bb[indexOfFaceDetected][1] = boundingBoxesOfDetectedFacesWith4Positions[indexOfFaceDetected][1]
-                                    bb[indexOfFaceDetected][2] = boundingBoxesOfDetectedFacesWith4Positions[indexOfFaceDetected][2]
-                                    bb[indexOfFaceDetected][3] = boundingBoxesOfDetectedFacesWith4Positions[indexOfFaceDetected][3]
+                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][0] = boundingBoxesOfDetectedFacesWith4Positions[indexOfFaceDetected][0]
+                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][1] = boundingBoxesOfDetectedFacesWith4Positions[indexOfFaceDetected][1]
+                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][2] = boundingBoxesOfDetectedFacesWith4Positions[indexOfFaceDetected][2]
+                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][3] = boundingBoxesOfDetectedFacesWith4Positions[indexOfFaceDetected][3]
 
                                     # inner exception
-                                    if bb[indexOfFaceDetected][0] <= 0 or bb[indexOfFaceDetected][1] <= 0 or bb[indexOfFaceDetected][2] >= len(frame[0]) or bb[indexOfFaceDetected][3] >= len(frame):
+                                    if boundingBoxesOfDetectedFace[indexOfFaceDetected][0] <= 0 or boundingBoxesOfDetectedFace[indexOfFaceDetected][1] <= 0 or boundingBoxesOfDetectedFace[indexOfFaceDetected][2] >= len(frame[0]) or boundingBoxesOfDetectedFace[indexOfFaceDetected][3] >= len(frame):
                                         #print('face is inner of range!')
                                         continue
 
-                                    cropped.append(frame[bb[indexOfFaceDetected][1]:bb[indexOfFaceDetected][3], bb[indexOfFaceDetected][0]:bb[indexOfFaceDetected][2], :])
+                                    cropped.append(frame[boundingBoxesOfDetectedFace[indexOfFaceDetected][1]:boundingBoxesOfDetectedFace[indexOfFaceDetected][3], boundingBoxesOfDetectedFace[indexOfFaceDetected][0]:boundingBoxesOfDetectedFace[indexOfFaceDetected][2], :])
                                     cropped[indexOfFaceDetected] = facenet.flip(cropped[indexOfFaceDetected], False)
                                     scaled.append(misc.imresize(cropped[indexOfFaceDetected], (image_size, image_size), interp='bilinear'))
-                                    scaled[indexOfFaceDetected] = cv2.resize(scaled[indexOfFaceDetected], (input_image_size,input_image_size),
-                                                            interpolation=cv2.INTER_CUBIC)
+                                    scaled[indexOfFaceDetected] = cv2.resize(scaled[indexOfFaceDetected], 
+                                                                    (input_image_size,input_image_size),
+                                                                    interpolation=cv2.INTER_CUBIC)
                                     scaled[indexOfFaceDetected] = facenet.prewhiten(scaled[indexOfFaceDetected])
                                     scaled_reshape.append(scaled[indexOfFaceDetected].reshape(-1,input_image_size,input_image_size,3))
-                                    feed_dict = {images_placeholder: scaled_reshape[indexOfFaceDetected], phase_train_placeholder: False}
+                                    feed_dict = {   images_placeholder: scaled_reshape[indexOfFaceDetected], 
+                                                    phase_train_placeholder: False}
                                     emb_array[0, :] = sess.run(embeddings, feed_dict=feed_dict)
+
                                     predictions = model.predict_proba(emb_array)
-                                    print('Predicción: ',predictions)
                                     best_class_indices = np.argmax(predictions, axis=1)
-                                    #print('best class indices: ',best_class_indices)
                                     best_class_probabilities = predictions[np.arange(len(best_class_indices)), best_class_indices]
-                                    self.printRectangleToImage(frame,bb[indexOfFaceDetected][0], bb[indexOfFaceDetected][1],bb[indexOfFaceDetected][2], bb[indexOfFaceDetected][3], "green")
-                                    if (best_class_probabilities[0] >= 0.75):
-                                        print('Mejor probabilidad >= 0.75: ',best_class_probabilities[0])
-                                    else:
-                                        print('Mejor probabilidad < 0.75: ',best_class_probabilities[0])
-                                    text_x = bb[indexOfFaceDetected][0]
-                                    text_y = bb[indexOfFaceDetected][3] + 20
-                                    
+                                    self.printRectangleToImage(frame,boundingBoxesOfDetectedFace[indexOfFaceDetected][0], boundingBoxesOfDetectedFace[indexOfFaceDetected][1],boundingBoxesOfDetectedFace[indexOfFaceDetected][2], boundingBoxesOfDetectedFace[indexOfFaceDetected][3], "green")
+
                                     faceName = self.getFaceNameFromFacesListByIndex(facesList, best_class_indices[0])
-                                    self.printTextToImage(frame,faceName,text_x,text_y,"red" )
+                                    self.printTextToImage(  frame,faceName,
+                                                            boundingBoxesOfDetectedFace[indexOfFaceDetected][0],
+                                                            boundingBoxesOfDetectedFace[indexOfFaceDetected][3] + 20,
+                                                            "red" )
+                                    
+                                    print('Predicción: ',predictions)
+                                    print('best class indices: ',best_class_indices)
+                                    print("best class probabilities ",best_class_probabilities[0])
                                     print("face ", faceName)
                             #else:
                                 #print('Unable to align, no faces')
@@ -182,12 +185,8 @@ class TestFacenet:
                         prevTime = curTime
                         fps = 1 / (sec)
                         strFPS = 'FPS: %2.3f' % fps
-                        text_fps_x = len(frame[0]) - 150
-                        text_fps_y = 20
-                        self.printTextToImage(frame,strFPS,text_fps_x,text_fps_y,"black" )
-                        # c+=1
+                        self.printTextToImage(frame,strFPS,20,50,"black" )
                         cv2.imshow('Video', frame)
-
                         if cv2.waitKey(1) & 0xFF == ord('q'):
                             break
                         #else:
