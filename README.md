@@ -241,6 +241,10 @@ La consola deberia mostrar mensajes similares a los siguientes:
 
 ![N|Solid](imagenes/demoFacenetConsole.jpg)
 
+# Implementation
+
+Facenet with Hikvision DVR model DS-7108HGHI-F1 (page 11), use the next link to know the rtsp url https://www.ispyconnect.com/man.aspx?n=hikvision&page=10
+
 # Documents
 
 * [Google news](https://www.unocero.com/noticias/ciencia/google-nuestro-sistema-de-reconocimiento-de-rostros-es-el-mejor/)
