@@ -1,3 +1,18 @@
+Neto Bran
+https://www.youtube.com/watch?v=cVlFckZyz4s
+py video.py --videoFolder  videos --videoName Neto_Bran --maxFileNumber 30 --startInFrame 250
+
+Jimmy Morales
+https://www.youtube.com/watch?v=QB8KHoR-kNY
+py video.py --videoFolder  videos --videoName Jimmy_Morales --maxFileNumber 30 --saveWithAkey True
+
+Sandra Torres
+https://www.youtube.com/watch?v=1qSCXkFgB3U
+py video.py --videoFolder  videos --videoName Sandra_Torres --maxFileNumber 30 --saveWithAkey True
+
+Alejandro Giammattei
+py video.py --videoFolder  videos --videoName Alejandro_Giammattei --maxFileNumber 30 --saveWithAkey True
+
 Jose_Mourinho
 https://www.youtube.com/watch?v=QB8KHoR-kNY
 
