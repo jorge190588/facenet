@@ -1,13 +1,106 @@
-Cristiano_Ronaldo	1	2
-Iker_Casillas	1	2
-Jose_Mourinho	1	2
-Keylor_Navas	1	2
-jorge_santos	2	3
-Cristiano_Ronaldo	1	2
-Iker_Casillas	1	2
-Jose_Mourinho	1	2
-Keylor_Navas	1	2
-jorge_santos	2	3
-Cristiano_Ronaldo	39	Keylor_Navas	59
-Jose_Mourinho	83	Iker_Casillas	41
-jorge_santos	6	Keylor_Navas	61
+Camila_Lara	1	2
+Desconocido	1	2
+Jimmy_Morales	1	2
+Neto_Bran	1	2
+Sandra_Jovel	1	2
+Sandra_Torres	1	2
+jorge_santos	1	2
+Camila_Lara	29	jorge_santos	28
+Jimmy_Morales	11	Neto_Bran	12
+Camila_Lara	1	2
+Desconocido	1	2
+Jimmy_Morales	1	2
+Neto_Bran	1	2
+Sandra_Jovel	1	2
+Sandra_Torres	1	2
+jorge_santos	1	2
+Camila_Lara	30	Sandra_Jovel	18
+Jimmy_Morales	15	Sandra_Torres	25
+Pablo_Villatoro	1	jorge_santos	29
+Sandra_Torres	1	Desconocido	12
+Camila_Lara	1	2
+Desconocido	1	2
+Jimmy_Morales	1	2
+Neto_Bran	1	2
+Pablo_Villatoro	1	2
+Sandra_Jovel	1	2
+Sandra_Torres	1	2
+jorge_santos	1	2
+Camila_Lara	20	Sandra_Torres	12
+Jimmy_Morales	13	Desconocido	7
+Pablo_Villatoro	5	jorge_santos	16
+Sandra_Torres	4	jorge_santos	36
+Camila_Lara	1	2
+Daniel_Lara	1	2
+Desconocido	1	2
+Jimmy_Morales	1	2
+Neto_Bran	1	2
+Pablo_Villatoro	1	2
+Sandra_Jovel	1	2
+Sandra_Torres	1	2
+jorge_santos	1	2
+Camila_Lara	28	jorge_santos	19
+Desconocido	11	Sandra_Torres	8
+Neto_Bran	26	jorge_santos	19
+Sandra_Jovel	30	Jimmy_Morales	13
+jorge_santos	11	Jimmy_Morales	12
+Alejandro_Giammattei	1	2
+Camila_Lara	1	2
+Daniel_Lara	1	2
+Desconocido	1	2
+Jimmy_Morales	1	2
+Neto_Bran	1	2
+Pablo_Villatoro	1	2
+Sandra_Jovel	1	2
+Sandra_Torres	1	2
+jorge_santos	1	2
+Alejandro_Giammattei	30	Jimmy_Morales	14
+Daniel_Lara	40	Camila_Lara	13
+Jimmy_Morales	17	Pablo_Villatoro	1
+Pablo_Villatoro	1	Desconocido	5
+Sandra_Torres	24	Sandra_Jovel	28
+Alejandro_Giammattei	1	2
+Camila_Lara	1	2
+Daniel_Lara	1	2
+Desconocido	1	2
+Jimmy_Morales	1	2
+Neto_Bran	1	2
+Pablo_Villatoro	1	2
+Sandra_Jovel	1	2
+Sandra_Torres	1	2
+jorge_santos	1	2
+Alejandro_Giammattei	7	Jimmy_Morales	7
+Daniel_Lara	6	Neto_Bran	22
+Jimmy_Morales	2	Camila_Lara	20
+Pablo_Villatoro	2	Sandra_Jovel	21
+Sandra_Torres	9	Desconocido	7
+Alejandro_Giammattei	1	2
+Camila_Lara	1	2
+Daniel_Lara	1	2
+Desconocido	1	2
+Jimmy_Morales	1	2
+Neto_Bran	1	2
+Pablo_Villatoro	1	2
+Sandra_Jovel	1	2
+Sandra_Torres	1	2
+jorge_santos	1	2
+Alejandro_Giammattei	3	Sandra_Torres	7
+Daniel_Lara	11	Pablo_Villatoro	5
+Jimmy_Morales	2	Sandra_Torres	25
+Pablo_Villatoro	1	Desconocido	2
+Sandra_Torres	1	Neto_Bran	5
+Alejandro_Giammattei	1	2
+Camila_Lara	1	2
+Daniel_Lara	1	2
+Desconocido	1	2
+Jimmy_Morales	1	2
+Neto_Bran	1	2
+Pablo_Villatoro	1	2
+Sandra_Jovel	1	2
+Sandra_Torres	1	2
+jorge_santos	1	2
+Alejandro_Giammattei	2	Daniel_Lara	11
+Daniel_Lara	18	Sandra_Jovel	12
+Jimmy_Morales	8	Neto_Bran	4
+Pablo_Villatoro	1	Desconocido	8
+Sandra_Torres	28	Sandra_Jovel	5

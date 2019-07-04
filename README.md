@@ -103,6 +103,7 @@ El resultado de la ejecucion del archivo camera.py con el directorio predetermin
 | --imageName |  | 
 | --startInFrame | .jpg | 
 | --cameraNumber | 0 | 
+| --saveWithAkey  | 0 |
 
 Ejemplos por consola:
 ```sh
@@ -130,6 +131,11 @@ La solución a este inconveniente es convertir del formato Parte1_parte2_1.png a
 | ------ | ------ | 
 | --inputDirectory | ..\\lfw\\imagenesDeEntrada\\ | 
 | --outputDirectory | ..\\lfw\\imagenesOrdenadas | 
+
+Ejemplo de codigo completo:
+```
+py files/DTL/orderData.py
+```
 
 ## 3. Conjunto de imagenes de entrenamiento.
 
@@ -169,10 +175,10 @@ Ejemplo de la variable de entorno desde windows
 ![N|Solid](imagenes/variableDeEntornoDesdeWindows.jpg)
 
 
-2. Recortar las imagenes originales, debe ubicarse por linea de comandos en el directorio "facenet/files/" ejecutando la siguiente sentencia desde la linea de comandos:
+2. Recortar las imagenes originales, debe ubicarse por linea de comandos en el directorio "facenet/" ejecutando la siguiente sentencia desde la linea de comandos:
 
 ```
-py src/align/align_dataset_mtcnn.py lfw/imagenesOrdenadas lfw/imagenesRostros --image_size 160 --margin 32 --random_order --gpu_memory_fraction 0.25
+py files/src/align/align_dataset_mtcnn.py files/lfw/imagenesOrdenadas files/lfw/imagenesRostros --image_size 160 --margin 32 --random_order --gpu_memory_fraction 0.25
 ```
 
 El resultado despues de la ejecucion de la sentencia anterior deberia ser similar al siguiente:
@@ -186,7 +192,11 @@ El resultado despues de la ejecucion de la sentencia anterior deberia ser simila
 El archivo pairs.txt contiene informacion las imagenes y carpetas elegidas para realizar la validación del modelo.   Para generar el archivo se deben seguir los pasos siguientes:
 
 1. Usando una consola debe ubicarse en la carpeta "files/pairFile" y ejecutar el comando "py createPairsFiles.py"
-2. Usando la consola debe ubicarse en la raiz del proyecto y ejecutar el comando"py files/pairFile/createPairsFiles.py"
+2. Usando la consola debe ubicarse en la raiz del proyecto y ejecutar el comando:
+
+```
+py files/pairFile/createPairsFiles.py
+```
 
 Despues de ejecutar la opcion 1 o 2 debe visualizar la carpeta files/pairFile el archivo pairs.txt 
 
@@ -204,8 +214,8 @@ Los parametros opcionales para ejecutar el archivo createPairsFiles.py son los s
 
 El proceso de validación es para determinar la exactitud del modelo.  Ejecute los comandos siguientes:
 
-1. Ubicarse en la carpeta "facenet/files" por medio de la consola de comandos.
-2. ejecutar la sentencia "py src/validate_on_lfw.py lfw/imagenesRostros models/20180402-114759 --distance_metric 1 --use_flipped_images --subtract_mean --use_fixed_image_standardization --lfw_pair pairFile/pairs.txt  --lfw_batch_size 23"
+1. Ubicarse en la carpeta "facenet/" por medio de la consola de comandos.
+2. ejecutar la sentencia "py files/src/validate_on_lfw.py files/lfw/imagenesRostros files/models/20180402-114759 --distance_metric 1 --use_flipped_images --subtract_mean --use_fixed_image_standardization --lfw_pair files/pairFile/pairs.txt  --lfw_batch_size 23"
 
 En este ejemplo hay tres carpetas con 1,000 imágenes cada una, es decir que validamos el modelo con 3,000, el tiempo estimado de entrenamiento es de 30 minutos.
 
@@ -221,16 +231,22 @@ Al finalizar el proceso de validación, el resultado debe ser similar al siguien
 El clasificador que vamos a crear tiene el nombre "lfw_classifier1000x35.pkl"
 
 1. Ubicarse en la carpeta "facenet/files" por medio de la consola de comandos.
-2. ejecutar el comando "py src/classifier.py TRAIN lfw/imagenesRostros models/20180402-114759/20180402-114759.pb models/20180402-114759/lfw_classifier1000x35.pkl --batch_size 1000 --min_nrof_images_per_class 40 --nrof_train_images_per_class 35 --use_split_dataset"
+2. ejecutar el comando:
 
-
+```
+ "py files/src/classifier.py TRAIN files/lfw/imagenesRostros files/models/20180402-114759/20180402-114759.pb files/models/20180402-114759/lfw_classifier1000x35.pkl --batch_size 1000 --min_nrof_images_per_class 40 --nrof_train_images_per_class 35 --use_split_dataset"
+```
 
 ## 6. Abrir el demo 
 
 Para probar el reconocimiento de imágenes debe seguir los pasos siguientes:
 
-1. Ubicarse en la carpeta "facenet/files" por medio de la consola de comandos.
-2. Ejectuar el comando "py src/testfacenet.py"
+1. Ubicarse en la carpeta "facenet/" por medio de la consola de comandos.
+2. Ejectuar el comando:
+
+```
+ "py files/src/testfacenet.py"
+```
 
 A continuación se abre la cámara y ya podemos probar el reconocimiento de imágenes.   Un ejemplo del resultado final es el siguiente:
 

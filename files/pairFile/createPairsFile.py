@@ -7,14 +7,21 @@ class CreatePairsFile:
         self.filePath  = ""
         self.folders  =[]
     
-    def init(self, args):
+    def initParams(self, args):
         self.baseDir= args.baseDir
         self.separate= args.separate
         self.filePath = args.filePath
         self.folders  =  self.getFolders(self.baseDir)
+    
+    def init(self):
+        self.removeFileIfExist()
         self.pairs()
         self.shuffle()
-    
+
+    def removeFileIfExist(self):
+        if os.path.isfile(self.filePath):
+            print("file exists, removed")
+
     def createPairs(self,totalPairs):
         result = []
         for i in range(0, totalPairs-1):
@@ -66,14 +73,17 @@ class CreatePairsFile:
                     content = name + "\t" + file1.split(self.separate)[1].lstrip("0").rstrip(".png") + "\t" + other_dir + "\t" + file2.split(self.separate)[1].lstrip("0").rstrip(".png") + "\n"
                     f.write(content)    
 
-def parse_arguments(argv):
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--baseDir', type=str, help='Folder path', default="../lfw/imagenesRostros/")
-    parser.add_argument('--filePath', type=str, help='file name', default="pairs.txt")
-    parser.add_argument('--separate', type=str, help='Separate string', default="_0")
-    return parser.parse_args(argv)
+    def parse_arguments(self, argv):
+        parser = argparse.ArgumentParser()
+        currentPath = os.getcwd()
+        baseDir     = os.path.join(currentPath,"lfw\\imagenesRostros\\")
+        pairFileDir = os.path.join(currentPath,"pairFile\\pairs.txt")
+        parser.add_argument('--baseDir', type=str, help='Folder path', default=baseDir)
+        parser.add_argument('--filePath', type=str, help='file name', default=pairFileDir)
+        parser.add_argument('--separate', type=str, help='Separate string', default="_0")
+        return self.initParams(parser.parse_args(argv))
 
 if __name__ == '__main__':
     createPairsFile = CreatePairsFile()
-    args=parse_arguments(sys.argv[1:])
-    createPairsFile.init(args)
+    createPairsFile.parse_arguments(sys.argv[1:])
+    createPairsFile.init()

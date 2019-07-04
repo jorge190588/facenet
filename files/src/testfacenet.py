@@ -11,24 +11,24 @@ from sklearn.svm import SVC
 from sklearn.externals import joblib
 
 class TestFacenet:
-    def __init__(self):
-        self.alignDirectory  = ""
-        self.facesDirectory = ""
-        self.modelDirectory = ""
-        self.modelFile = ""
-        self.modelFilePath = ""
-        self.pairFile=""
-        self.pairFileDirectory= ""
+    def __init__(self, _alignDirectory=None, _facesDirectory=None,  _modelDirectory=None,
+                 _modelFile=None, _pairFileDirectory=None, _pairFile=None, _cameraNumber=None):
+        self.alignDirectory  = _alignDirectory
+        self.facesDirectory = _facesDirectory
+        self.modelDirectory = _modelDirectory
+        self.modelFile = _modelFile
+        self.modelFilePath = _pairFileDirectory
+        self.pairFile= _pairFile
+        self.pairFileDirectory= _cameraNumber
 
-    def init(self, args):
+    def init(self):
         path =os.path.dirname(os.path.realpath(__file__))
-        self.alignDirectory  = os.path.join(path,args.alignDirectory)
-        self.facesDirectory  = os.path.join(path,args.facesDirectory)
-        self.modelFile = args.modelFile
-        self.modelDirectory = os.path.join(path,args.modelDirectory)
+        self.alignDirectory  = os.path.join(path,self.alignDirectory)
+        self.facesDirectory  = os.path.join(path,self.facesDirectory)
+        self.modelDirectory = os.path.join(path,self.modelDirectory)
         self.modelFilePath = os.path.join(path,self.modelDirectory,self.modelFile)
-        self.pairFileDirectory = os.path.join(path,args.pairFileDirectory)
-        self.pairFile = args.pairFile
+        print("pairFileDirectory",self.pairFileDirectory)
+        self.pairFileDirectory = os.path.join(path,self.pairFileDirectory)
         self.pairFilePath = os.path.join(path,self.pairFileDirectory, self.pairFile)
         if (self.checkIfDirectoryExists("Align directory", self.alignDirectory)) is False: return False
         if (self.checkIfDirectoryExists("Faces directory", self.facesDirectory)) is False: return False
@@ -54,23 +54,44 @@ class TestFacenet:
                 return faceName
         return "Not detected"
 
-    def printTextToImage(self, image, text, position_x, position_y, colorName):
+    def getBGRcodeFromColor(self, colorName):
         if (colorName is "black"):
-            colorR=0
-            colorG=0
-            colorB=0
+            return 0,0,0
         if (colorName is "red"):
-            colorR=0
-            colorG=0
-            colorB=255
-        cv2.putText(image, text, (position_x, position_y),cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (colorR, colorG, colorB), thickness=1, lineType=2)        
+            return 0, 0, 255
+        if (colorName is "green"):
+            return 0, 255,0
+        if (colorName is "blue"):
+            return 175, 76, 9
+        if (colorName is "white"):
+            return 255, 255, 255
+
+    def printTextToImage(self, image, text, position_x, position_y, colorName):
+        colorB, colorG, colorR = self.getBGRcodeFromColor(colorName)
+        #print("text ",colorB, colorG, colorR)
+        cv2.putText(image, text, (position_x, position_y),
+                    cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, 
+                    (colorB, colorG, colorR), thickness=1, lineType=2)        
 
     def printRectangleToImage(self, image,position_x1,position_y1,position_x2,position_y2, colorName):
-        if (colorName is "green"):
-            colorR=0
-            colorG=255
-            colorB=0
-        cv2.rectangle(image, (position_x1, position_y1), (position_x2, position_y2), (colorR, colorG, colorB), 2)
+        colorB, colorG, colorR  = self.getBGRcodeFromColor(colorName)
+        #print("rectangle ",colorB, colorG, colorR)
+        cv2.rectangle(  image, (position_x1, position_y1), (position_x2, position_y2), 
+                        (colorB, colorG, colorR), 4)
+
+    def printRectangleToImageBackground(self, image,position_x1,position_y1,position_x2,position_y2, 
+                                        colorName, text):
+        font_scale = 1.5
+        font = cv2.FONT_HERSHEY_PLAIN                               
+        (text_width, text_height) = cv2.getTextSize(text, font, fontScale=font_scale, thickness=1)[0]
+        colorB, colorG, colorR  = self.getBGRcodeFromColor(colorName)
+        
+        if (position_x1+text_width)>position_x2:
+            position_x2 = position_x1 + text_width
+        
+        cv2.rectangle(image, (position_x1-5, position_y2-1), (position_x2 , position_y2+25), 
+                    (colorB, colorG, colorR), 
+                    cv2.FILLED)
 
     def getModel(self):
         classifierFilePath = os.path.expanduser(self.pairFilePath)
@@ -106,8 +127,8 @@ class TestFacenet:
                     model =self.getModel()
 
                     video_capture = cv2.VideoCapture(0) #'./test.mp4'
-                    video_capture.set(3,4920)
-                    video_capture.set(4,3080)
+                    #video_capture.set(3,4920)
+                    #video_capture.set(4,3080)
                     c = 0
 
                     # #video writer
@@ -119,7 +140,7 @@ class TestFacenet:
                     while True:
                         ret, frame = video_capture.read()
                         #if (frame != None):
-                        frame = cv2.resize(frame, (0,0), fx=0.7, fy=0.7)    #resize frame (optional)
+                        frame = cv2.resize(frame, (0,0), fx=2, fy=2)    #resize frame (optional)
                         curTime = time.time()+1    # calc fps
                         timeF = frame_interval
 
@@ -166,13 +187,23 @@ class TestFacenet:
                                     predictions = model.predict_proba(emb_array)
                                     best_class_indices = np.argmax(predictions, axis=1)
                                     best_class_probabilities = predictions[np.arange(len(best_class_indices)), best_class_indices]
-                                    self.printRectangleToImage(frame,boundingBoxesOfDetectedFace[indexOfFaceDetected][0], boundingBoxesOfDetectedFace[indexOfFaceDetected][1],boundingBoxesOfDetectedFace[indexOfFaceDetected][2], boundingBoxesOfDetectedFace[indexOfFaceDetected][3], "green")
-
                                     faceName = self.getFaceNameFromFacesListByIndex(facesList, best_class_indices[0])
+
+                                    self.printRectangleToImage(frame,boundingBoxesOfDetectedFace[indexOfFaceDetected][0], 
+                                                                boundingBoxesOfDetectedFace[indexOfFaceDetected][1],
+                                                                boundingBoxesOfDetectedFace[indexOfFaceDetected][2], 
+                                                                boundingBoxesOfDetectedFace[indexOfFaceDetected][3], "blue")
+
+                                    self.printRectangleToImageBackground(frame,boundingBoxesOfDetectedFace[indexOfFaceDetected][0], 
+                                                                boundingBoxesOfDetectedFace[indexOfFaceDetected][1],
+                                                                boundingBoxesOfDetectedFace[indexOfFaceDetected][2], 
+                                                                boundingBoxesOfDetectedFace[indexOfFaceDetected][3], "blue",
+                                                                faceName)
+
                                     self.printTextToImage(  frame,faceName,
                                                             boundingBoxesOfDetectedFace[indexOfFaceDetected][0],
                                                             boundingBoxesOfDetectedFace[indexOfFaceDetected][3] + 20,
-                                                            "red" )
+                                                            "white" )
                                     
                                     print('Predicción: ',predictions)
                                     print('best class indices: ',best_class_indices)
@@ -198,19 +229,27 @@ class TestFacenet:
                 except Exception as inst:
                     print('exception ',inst)
 
+    def initParams(self, args):
+        self.alignDirectory  = args.alignDirectory
+        self.facesDirectory = args.facesDirectory
+        self.modelDirectory = args.modelDirectory
+        self.modelFile = args.modelFile
+        self.pairFileDirectory = args.pairFileDirectory
+        self.pairFile= args.pairFile
+        self.cameraNumber= args.cameraNumber
 
-def parse_arguments(argv):
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--alignDirectory', type=str, help='Align directory', default="align")
-    parser.add_argument('--facesDirectory', type=str, help='Faces directory', default="..\lfw\imagenesRostros")
-    parser.add_argument('--modelDirectory', type=str, help='Model directory', default="..\models\\20180402-114759")
-    parser.add_argument('--modelFile', type=str, help='Model file', default="20180402-114759.pb")
-    parser.add_argument('--pairFileDirectory', type=str, help='Pair file directory', default="..\models\\20180402-114759")
-    parser.add_argument('--pairFile', type=str, help='Pair file directory', default="lfw_classifier1000x35.pkl")    
-    parser.add_argument('--cameraNumber', type=int, help='cameraNumber', default=0)
-    return parser.parse_args(argv)
+    def parse_arguments(self,argv):
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--alignDirectory', type=str, help='Align directory', default="align")
+        parser.add_argument('--facesDirectory', type=str, help='Faces directory', default="..\\lfw\imagenesRostros")
+        parser.add_argument('--modelDirectory', type=str, help='Model directory', default="..\\models\\20180402-114759")
+        parser.add_argument('--modelFile', type=str, help='Model file', default="20180402-114759.pb")
+        parser.add_argument('--pairFileDirectory', type=str, help='Pair file directory', default="..\\models\\20180402-114759")
+        parser.add_argument('--pairFile', type=str, help='Pair file directory', default="lfw_classifier1000x35.pkl")    
+        parser.add_argument('--cameraNumber', type=int, help='cameraNumber', default=0)
+        return self.initParams(parser.parse_args(argv))
 
 if __name__ == '__main__':
     testFacenet = TestFacenet()
     args=parse_arguments(sys.argv[1:])
-    testFacenet.init(args)
+    testFacenet.init()

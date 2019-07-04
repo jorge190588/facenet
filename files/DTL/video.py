@@ -31,13 +31,13 @@ class Video:
         self.videoName  = args.videoName
         self.videoExtension= args.videoExtension
         self.videoFolder=args.videoFolder
-        self.videoFullPath =self.videoFolder+"/"+self.videoName+self.videoExtension
         self.outDirectory  = args.outDirectory
         self.index = args.index
         self.imageExtension= args.imageExtension
         self.index = args.index
         self.maxFileNumber = args.maxFileNumber
         self.path = os.path.dirname(os.path.realpath(__file__))
+        self.videoFullPath =os.path.join(self.path,self.videoFolder+"/"+self.videoName+self.videoExtension)
         self.fullOutDirectory = os.path.join(self.path,self.outDirectory,self.imageName+"\\")
         self.cameraNumber = args.cameraNumber
         self.startInFrame=args.startInFrame
@@ -82,7 +82,7 @@ class Video:
 
 def parse_arguments(argv):
     parser = argparse.ArgumentParser()
-    parser.add_argument('--videoFolder', type=str, help='Video folder', default="video")
+    parser.add_argument('--videoFolder', type=str, help='Video folder', default="videos")
     parser.add_argument('--videoName', type=str, help='Video name', default="videoName")
     parser.add_argument('--videoExtension', type=str, help='Video extension', default=".mp4")
     parser.add_argument('--outDirectory', type=str, help='directory', default='..\lfw\imagenesDeEntrada')
@@ -99,3 +99,5 @@ if __name__ == '__main__':
     video = Video()
     args=parse_arguments(sys.argv[1:])
     video.init(args)
+
+# py DTL/video.py --videoName Alejandro_Giammattei --saveWithAkey 1
