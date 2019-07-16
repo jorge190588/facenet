@@ -178,7 +178,7 @@ class Classifier:
             help='Random seed.', default=666)
         parser.add_argument('--min_nrof_images_per_class', type=int,default=5,
             help='Only include classes with at least this number of images in the dataset')
-        parser.add_argument('--nrof_train_images_per_class', type=int,default=5,
+        parser.add_argument('--nrof_train_images_per_class', type=int,default=15,
             help='Use this number of images from each class for training and the rest for testing')
         
         return self.initParams(parser.parse_args(argv))

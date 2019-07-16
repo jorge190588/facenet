@@ -102,6 +102,14 @@ class TestFacenet:
             print('load classifier file-> %s' % classifierFilePath)
         return model
 
+    def getBoundingBoxesOfDetectedFaceFromCameraFrame(self, boundingBoxesOfDetectedFacesWith4PositionsFromCameraFrame,indexOfFaceDetected ):
+        boundingBoxesOfDetectedFace = np.zeros(4, dtype=np.int32)
+        boundingBoxesOfDetectedFace[0] = boundingBoxesOfDetectedFacesWith4PositionsFromCameraFrame[indexOfFaceDetected][0]
+        boundingBoxesOfDetectedFace[1] = boundingBoxesOfDetectedFacesWith4PositionsFromCameraFrame[indexOfFaceDetected][1]
+        boundingBoxesOfDetectedFace[2] = boundingBoxesOfDetectedFacesWith4PositionsFromCameraFrame[indexOfFaceDetected][2]
+        boundingBoxesOfDetectedFace[3] = boundingBoxesOfDetectedFacesWith4PositionsFromCameraFrame[indexOfFaceDetected][3]
+        return boundingBoxesOfDetectedFace
+
     def runTest(self):    
         print('Creating networks and loading parameters')
         with tf.Graph().as_default():
@@ -113,7 +121,7 @@ class TestFacenet:
                 scaleFactor = 0.709
                 threshold = [0.6, 0.7, 0.7]  # three steps's threshold
                 # margin = 44
-                frame_interval = 3
+                frame_interval = 5
                 image_size = 182
                 input_image_size = 160                
                 facesList = self.getFacesList()
@@ -149,11 +157,14 @@ class TestFacenet:
                             if frame.ndim == 2:
                                 frame = facenet.to_rgb(frame)
                             frame = frame[:, :, 0:3]
-                            boundingBoxesOfAllDetectedFaces, _ = align.detect_face.detect_face(frame, minimunSizeOfFace, pnet, rnet, onet, threshold, scaleFactor)
-                            numberOfFacesDeteted = boundingBoxesOfAllDetectedFaces.shape[0]
-                            self.printTextToImage(frame,"No. Faces "+str(numberOfFacesDeteted),20,20,"black" )
+                            boundingBoxesOfAllDetectedFacesFromCameraFrame, _ = align.detect_face.detect_face(frame, minimunSizeOfFace, pnet, rnet, onet, threshold, scaleFactor)
+                            numberOfFacesDeteted = boundingBoxesOfAllDetectedFacesFromCameraFrame.shape[0]
+                            print("----------------------")
+
+                            self.printTextToImage(frame,"No. Faces "+str(numberOfFacesDeteted),20,20,"black")
+                            
                             if numberOfFacesDeteted > 0:
-                                boundingBoxesOfDetectedFacesWith4Positions = boundingBoxesOfAllDetectedFaces[:, 0:4]
+                                boundingBoxesOfDetectedFacesWith4PositionsFromCameraFrame = boundingBoxesOfAllDetectedFacesFromCameraFrame[:, 0:4]
                                 # img_size = np.asarray(frame.shape)[0:2]
                                 cropped = []
                                 scaled = []
@@ -162,11 +173,9 @@ class TestFacenet:
                                 
                                 for indexOfFaceDetected in range(numberOfFacesDeteted):
                                     emb_array = np.zeros((1, embedding_size))
-                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][0] = boundingBoxesOfDetectedFacesWith4Positions[indexOfFaceDetected][0]
-                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][1] = boundingBoxesOfDetectedFacesWith4Positions[indexOfFaceDetected][1]
-                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][2] = boundingBoxesOfDetectedFacesWith4Positions[indexOfFaceDetected][2]
-                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][3] = boundingBoxesOfDetectedFacesWith4Positions[indexOfFaceDetected][3]
-
+                                    
+                                    boundingBoxesOfDetectedFace[indexOfFaceDetected] = self.getBoundingBoxesOfDetectedFaceFromCameraFrame(
+                                                                                        boundingBoxesOfDetectedFacesWith4PositionsFromCameraFrame,indexOfFaceDetected)
                                     # inner exception
                                     if boundingBoxesOfDetectedFace[indexOfFaceDetected][0] <= 0 or boundingBoxesOfDetectedFace[indexOfFaceDetected][1] <= 0 or boundingBoxesOfDetectedFace[indexOfFaceDetected][2] >= len(frame[0]) or boundingBoxesOfDetectedFace[indexOfFaceDetected][3] >= len(frame):
                                         #print('face is inner of range!')
@@ -180,6 +189,7 @@ class TestFacenet:
                                                                     interpolation=cv2.INTER_CUBIC)
                                     scaled[indexOfFaceDetected] = facenet.prewhiten(scaled[indexOfFaceDetected])
                                     scaled_reshape.append(scaled[indexOfFaceDetected].reshape(-1,input_image_size,input_image_size,3))
+                                    
                                     feed_dict = {   images_placeholder: scaled_reshape[indexOfFaceDetected], 
                                                     phase_train_placeholder: False}
                                     emb_array[0, :] = sess.run(embeddings, feed_dict=feed_dict)
@@ -189,26 +199,28 @@ class TestFacenet:
                                     best_class_probabilities = predictions[np.arange(len(best_class_indices)), best_class_indices]
                                     faceName = self.getFaceNameFromFacesListByIndex(facesList, best_class_indices[0])
 
-                                    self.printRectangleToImage(frame,boundingBoxesOfDetectedFace[indexOfFaceDetected][0], 
-                                                                boundingBoxesOfDetectedFace[indexOfFaceDetected][1],
-                                                                boundingBoxesOfDetectedFace[indexOfFaceDetected][2], 
-                                                                boundingBoxesOfDetectedFace[indexOfFaceDetected][3], "blue")
+                                    if ((int) (best_class_probabilities[0]*100))>45:
+                                        self.printRectangleToImage(frame,boundingBoxesOfDetectedFace[indexOfFaceDetected][0], 
+                                                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][1],
+                                                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][2], 
+                                                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][3], "blue")
 
-                                    self.printRectangleToImageBackground(frame,boundingBoxesOfDetectedFace[indexOfFaceDetected][0], 
-                                                                boundingBoxesOfDetectedFace[indexOfFaceDetected][1],
-                                                                boundingBoxesOfDetectedFace[indexOfFaceDetected][2], 
-                                                                boundingBoxesOfDetectedFace[indexOfFaceDetected][3], "blue",
-                                                                faceName)
+                                        self.printRectangleToImageBackground(frame,boundingBoxesOfDetectedFace[indexOfFaceDetected][0], 
+                                                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][1],
+                                                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][2], 
+                                                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][3], "blue",
+                                                                    faceName)
 
-                                    self.printTextToImage(  frame,faceName,
-                                                            boundingBoxesOfDetectedFace[indexOfFaceDetected][0],
-                                                            boundingBoxesOfDetectedFace[indexOfFaceDetected][3] + 20,
-                                                            "white" )
-                                    
-                                    print('Predicción: ',predictions)
-                                    print('best class indices: ',best_class_indices)
-                                    print("best class probabilities ",best_class_probabilities[0])
-                                    print("face ", faceName)
+                                        faceNameWithProbability = faceName+" "+str((int) (best_class_probabilities[0]*100))+"%"
+                                        self.printTextToImage(  frame,faceNameWithProbability,
+                                                                boundingBoxesOfDetectedFace[indexOfFaceDetected][0],
+                                                                boundingBoxesOfDetectedFace[indexOfFaceDetected][3] + 20,
+                                                                "white" )
+                                        
+                                        # print('best class indices: ',best_class_indices)
+                                        # print("best class probabilities ",best_class_probabilities[0])
+                                        print('Predicción: ',predictions)
+                                        print("face ", faceName, (int) (best_class_probabilities[0]*100),"%"," indice ",best_class_indices[0])
                             #else:
                                 #print('Unable to align, no faces')
                     
@@ -251,5 +263,6 @@ class TestFacenet:
 
 if __name__ == '__main__':
     testFacenet = TestFacenet()
-    args=parse_arguments(sys.argv[1:])
+    print ("arguments ",sys.argv[1:])
+    args=testFacenet.parse_arguments(sys.argv[1:])
     testFacenet.init()
