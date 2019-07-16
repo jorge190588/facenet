@@ -110,6 +110,23 @@ class TestFacenet:
         boundingBoxesOfDetectedFace[3] = boundingBoxesOfDetectedFacesWith4PositionsFromCameraFrame[indexOfFaceDetected][3]
         return boundingBoxesOfDetectedFace
 
+    def printTextAndBox(self, frame, boundingBoxesOfDetectedFace, indexOfFaceDetected, faceNameWithProbability):
+        self.printRectangleToImage(frame,boundingBoxesOfDetectedFace[indexOfFaceDetected][0], 
+                                        boundingBoxesOfDetectedFace[indexOfFaceDetected][1],
+                                        boundingBoxesOfDetectedFace[indexOfFaceDetected][2], 
+                                        boundingBoxesOfDetectedFace[indexOfFaceDetected][3], "blue")
+
+        self.printRectangleToImageBackground(frame,boundingBoxesOfDetectedFace[indexOfFaceDetected][0], 
+                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][1],
+                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][2], 
+                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][3], "blue",
+                                    faceNameWithProbability)
+                                        
+        self.printTextToImage(  frame,faceNameWithProbability,
+                                boundingBoxesOfDetectedFace[indexOfFaceDetected][0],
+                                boundingBoxesOfDetectedFace[indexOfFaceDetected][3] + 20,
+                                "white" )
+
     def runTest(self):    
         print('Creating networks and loading parameters')
         with tf.Graph().as_default():
@@ -121,7 +138,7 @@ class TestFacenet:
                 scaleFactor = 0.709
                 threshold = [0.6, 0.7, 0.7]  # three steps's threshold
                 # margin = 44
-                frame_interval = 5
+                frame_interval = 2
                 image_size = 182
                 input_image_size = 160                
                 facesList = self.getFacesList()
@@ -190,37 +207,24 @@ class TestFacenet:
                                     scaled[indexOfFaceDetected] = facenet.prewhiten(scaled[indexOfFaceDetected])
                                     scaled_reshape.append(scaled[indexOfFaceDetected].reshape(-1,input_image_size,input_image_size,3))
                                     
+
                                     feed_dict = {   images_placeholder: scaled_reshape[indexOfFaceDetected], 
                                                     phase_train_placeholder: False}
                                     emb_array[0, :] = sess.run(embeddings, feed_dict=feed_dict)
-                                    
                                     predictions = model.predict_proba(emb_array)
                                     best_class_indices = np.argmax(predictions, axis=1)
                                     best_class_probabilities = predictions[np.arange(len(best_class_indices)), best_class_indices]
                                     faceName = self.getFaceNameFromFacesListByIndex(facesList, best_class_indices[0])
 
-                                    if ((int) (best_class_probabilities[0]*100))>45:
-                                        self.printRectangleToImage(frame,boundingBoxesOfDetectedFace[indexOfFaceDetected][0], 
-                                                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][1],
-                                                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][2], 
-                                                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][3], "blue")
-
-                                        self.printRectangleToImageBackground(frame,boundingBoxesOfDetectedFace[indexOfFaceDetected][0], 
-                                                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][1],
-                                                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][2], 
-                                                                    boundingBoxesOfDetectedFace[indexOfFaceDetected][3], "blue",
-                                                                    faceName)
-
+                                    if ((int) (best_class_probabilities[0]*100))>30:
                                         faceNameWithProbability = faceName+" "+str((int) (best_class_probabilities[0]*100))+"%"
-                                        self.printTextToImage(  frame,faceNameWithProbability,
-                                                                boundingBoxesOfDetectedFace[indexOfFaceDetected][0],
-                                                                boundingBoxesOfDetectedFace[indexOfFaceDetected][3] + 20,
-                                                                "white" )
+                                        self.printTextAndBox(frame,boundingBoxesOfDetectedFace,
+                                                                indexOfFaceDetected, faceNameWithProbability )
                                         
                                         # print('best class indices: ',best_class_indices)
                                         # print("best class probabilities ",best_class_probabilities[0])
-                                        print('Predicción: ',predictions)
-                                        print("face ", faceName, (int) (best_class_probabilities[0]*100),"%"," indice ",best_class_indices[0])
+                                    print('Predicción: ',predictions)
+                                    print("face ", faceName, (int) (best_class_probabilities[0]*100),"%"," indice ",best_class_indices[0])
                             #else:
                                 #print('Unable to align, no faces')
                     
@@ -238,8 +242,8 @@ class TestFacenet:
                     # #video writer
                     out.release()
                     cv2.destroyAllWindows()
-                except Exception as inst:
-                    print('exception ',inst)
+                except Exception as e:
+                    print('Error on line {}'.format(sys.exc_info()[-1].tb_lineno), type(e).__name__, e)
 
     def initParams(self, args):
         self.alignDirectory  = args.alignDirectory
