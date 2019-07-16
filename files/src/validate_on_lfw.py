@@ -86,7 +86,15 @@ class Validate_on_lfw:
                     embeddings, label_batch, paths, actual_issame, self.lfw_batch_size, self.lfw_nrof_folds, self.distance_metric, self.subtract_mean,
                     self.use_flipped_images, self.use_fixed_image_standardization)
 
-                
+    def mcd(self, a, b):
+        resto = 0
+        while(b > 0):
+            resto = b
+            b = a % b
+            a = resto
+
+        return a
+
     def evaluate(self, sess, enqueue_op, image_paths_placeholder, labels_placeholder, phase_train_placeholder, batch_size_placeholder, control_placeholder,
             embeddings, labels, image_paths, actual_issame, batch_size, nrof_folds, distance_metric, subtract_mean, use_flipped_images, use_fixed_image_standardization):
         # Run forward pass to calculate embeddings
@@ -110,8 +118,9 @@ class Validate_on_lfw:
         print('actual_issame',actual_issame)
         print('nrof_images',nrof_images," nrof_embeddings (",nrof_embeddings,") * nrof_embeddings(",nrof_flips,")")
         print('batch_size',batch_size)
+        
         if (nrof_images % batch_size != 0):
-            batch_size=int(nrof_images  / 2)
+            batch_size=self.mcd(nrof_images, batch_size)
             print("new batch_size",batch_size)
 
         assert nrof_images % batch_size == 0, 'The number of LFW images must be an integer multiple of the LFW batch size'
@@ -154,7 +163,7 @@ class Validate_on_lfw:
         parser.add_argument('--lfw_dir', type=str, default=lfwDir,
             help='Path to the data directory containing aligned LFW face patches.')
         parser.add_argument('--lfw_batch_size', type=int,
-            help='Number of images to process in a batch in the LFW test set.', default=5)
+            help='Number of images to process in a batch in the LFW test set.', default=10)
         parser.add_argument('--model', type=str, default="models/20180402-114759",
             help='Could be either a directory containing the meta_file and ckpt_file or a model protobuf (.pb) file')
         parser.add_argument('--image_size', type=int,
